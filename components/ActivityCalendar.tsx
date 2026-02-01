@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 
 interface Activity {
@@ -33,6 +33,7 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month');
   const [showForm, setShowForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
   const [formData, setFormData] = useState({
     account_id: '',
     type: 'call',
@@ -45,6 +46,26 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
+
+  // Update current time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
+    return () => clearInterval(timer);
+  }, []);
+
+  const timeToPixels = (timeStr: string) => {
+    const [hours, mins] = timeStr.split(':').map(Number);
+    return (hours * 60 + mins - 8 * 60) * 1.5; // Assuming 8am start, 1.5px per minute
+  };
+
+  const getCurrentTimePercentage = () => {
+    const hours = currentTime.getHours();
+    const mins = currentTime.getMinutes();
+    const totalMins = hours * 60 + mins - 8 * 60; // Assuming 8am start
+    return (totalMins / (16 * 60)) * 100; // 16 hours (8am-12am)
+  };
 
   const getDaysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -179,6 +200,8 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
   };
 
   const today = new Date();
+  const isToday = currentDate.toDateString() === today.toDateString();
+  const hours = Array.from({ length: 16 }, (_, i) => i + 8); // 8am to 12am
 
   return (
     <div className="space-y-6">
@@ -398,7 +421,7 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
         <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
           <div className="flex justify-between items-center mb-6">
             <button onClick={prevDay} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">← Prev Day</button>
-            <h3 className="text-2xl font-bold text-white">{currentDate.toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric' })}</h3>
+            <h3 className="text-2xl font-bold text-white">{currentDate.toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric' })} {isToday && <span className="text-red-400 ml-2">● NOW</span>}</h3>
             <button onClick={nextDay} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Next Day →</button>
           </div>
 
@@ -409,30 +432,68 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
             + Add Activity for Today
           </button>
 
-          <div className="space-y-3">
-            {getActivitiesForDateAndTime(currentDate).map(activity => (
-              <div key={activity.id} className="bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-700 p-4 rounded-lg">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <p className="font-bold text-white text-lg">{activity.start_time} - {activity.end_time}</p>
-                    <p className="text-blue-200 font-semibold">{activity.account_name}</p>
-                    <p className="text-blue-300 text-sm">{typeIcons[activity.type]} {activity.type} with {activity.contact}</p>
-                    {activity.notes && <p className="text-blue-200 text-sm mt-2">{activity.notes}</p>}
+          {/* Timeline View */}
+          <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+            <div className="relative">
+              {/* Hour labels and lines */}
+              <div className="space-y-12">
+                {hours.map(hour => (
+                  <div key={hour} className="relative">
+                    <div className="flex items-start">
+                      <div className="w-12 text-gray-400 text-sm font-semibold">{String(hour).padStart(2, '0')}:00</div>
+                      <div className="flex-1 ml-4 border-t border-gray-700"></div>
+                    </div>
                   </div>
-                  <span className={'px-3 py-1 rounded text-xs font-medium whitespace-nowrap ' +
-                    (activity.outcome === 'interested' ? 'bg-green-900 text-green-300' :
-                     activity.outcome === 'need_follow_up' ? 'bg-yellow-900 text-yellow-300' :
-                     activity.outcome === 'not_interested' ? 'bg-red-900 text-red-300' :
-                     'bg-gray-600 text-gray-300')}>
-                    {activity.outcome}
-                  </span>
-                </div>
+                ))}
               </div>
-            ))}
-            {getActivitiesForDateAndTime(currentDate).length === 0 && (
-              <p className="text-gray-400 text-center py-8">No activities scheduled for this day</p>
-            )}
+
+              {/* Current time indicator (red line) */}
+              {isToday && (
+                <div
+                  className="absolute top-0 left-0 w-full h-1 bg-red-600 shadow-lg"
+                  style={{
+                    top: `${getCurrentTimePercentage()}%`,
+                    zIndex: 10
+                  }}
+                >
+                  <div className="flex items-center ml-4 -mt-2">
+                    <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                      NOW: {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Activities */}
+              <div className="absolute top-0 left-16 right-0 space-y-2">
+                {getActivitiesForDateAndTime(currentDate).map(activity => {
+                  const startMins = (parseInt(activity.start_time?.split(':')[0] || '0') * 60 + parseInt(activity.start_time?.split(':')[1] || '0') - 8 * 60) * 1.5;
+                  const endMins = (parseInt(activity.end_time?.split(':')[0] || '0') * 60 + parseInt(activity.end_time?.split(':')[1] || '0') - 8 * 60) * 1.5;
+                  const height = endMins - startMins;
+
+                  return (
+                    <div
+                      key={activity.id}
+                      className="absolute left-4 right-4 bg-gradient-to-r from-blue-600 to-blue-500 border-2 border-blue-400 p-3 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition"
+                      style={{
+                        top: `${startMins}px`,
+                        height: `${Math.max(height, 40)}px`,
+                        minWidth: '200px'
+                      }}
+                    >
+                      <div className="text-xs text-white font-bold">{activity.start_time} - {activity.end_time}</div>
+                      <div className="text-xs text-blue-100 font-semibold">{activity.account_name}</div>
+                      <div className="text-xs text-blue-200">{activity.type}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
+
+          {getActivitiesForDateAndTime(currentDate).length === 0 && (
+            <p className="text-gray-400 text-center py-12">No activities scheduled for this day</p>
+          )}
         </div>
       )}
 
