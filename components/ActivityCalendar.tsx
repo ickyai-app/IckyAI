@@ -278,29 +278,59 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold text-white">📅 Activity Calendar</h2>
-        <div className="flex gap-2">
-          <button onClick={() => setViewMode('month')} className={viewMode === 'month' ? 'px-4 py-2 bg-blue-600 text-white rounded-lg' : 'px-4 py-2 bg-gray-700 text-gray-300 rounded-lg'}>Month</button>
-          <button onClick={() => setViewMode('week')} className={viewMode === 'week' ? 'px-4 py-2 bg-blue-600 text-white rounded-lg' : 'px-4 py-2 bg-gray-700 text-gray-300 rounded-lg'}>Week</button>
-          <button onClick={() => setViewMode('day')} className={viewMode === 'day' ? 'px-4 py-2 bg-blue-600 text-white rounded-lg' : 'px-4 py-2 bg-gray-700 text-gray-300 rounded-lg'}>Day</button>
+    <div className="space-y-8 p-2">
+      <div className="flex justify-between items-center mb-8 px-2">
+        <h2 className="heading-secondary text-4xl">📅 Activity Calendar</h2>
+        <div className="flex gap-4 bg-gradient-to-r from-gray-900/50 to-gray-800/30 p-2 rounded-xl border border-cyan-500/20">
+          <button 
+            onClick={() => setViewMode('month')} 
+            className={`px-6 py-3 font-bold rounded-lg transition-all duration-300 ${
+              viewMode === 'month' 
+                ? 'bg-gradient-to-r from-cyan-500 to-cyan-400 text-gray-900 shadow-lg shadow-cyan-500/50' 
+                : 'text-gray-300 hover:text-cyan-300 hover:bg-gray-700/50'
+            }`}
+          >
+            Month
+          </button>
+          <button 
+            onClick={() => setViewMode('week')} 
+            className={`px-6 py-3 font-bold rounded-lg transition-all duration-300 ${
+              viewMode === 'week' 
+                ? 'bg-gradient-to-r from-cyan-500 to-cyan-400 text-gray-900 shadow-lg shadow-cyan-500/50' 
+                : 'text-gray-300 hover:text-cyan-300 hover:bg-gray-700/50'
+            }`}
+          >
+            Week
+          </button>
+          <button 
+            onClick={() => setViewMode('day')} 
+            className={`px-6 py-3 font-bold rounded-lg transition-all duration-300 ${
+              viewMode === 'day' 
+                ? 'bg-gradient-to-r from-cyan-500 to-cyan-400 text-gray-900 shadow-lg shadow-cyan-500/50' 
+                : 'text-gray-300 hover:text-cyan-300 hover:bg-gray-700/50'
+            }`}
+          >
+            Day
+          </button>
         </div>
       </div>
 
       {showForm && (
-        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6 mb-6 sticky top-20 z-50">
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="text-xl font-bold text-white">
-              {editingActivity ? '✏️ Edit Activity' : '➕ Add Activity'} for {selectedDate?.toLocaleDateString()} at {formData.start_time}
-            </h3>
+        <div className="futuristic-card p-8 mb-8 sticky top-20 z-50 border border-cyan-500/30 bg-gradient-to-br from-gray-900/90 via-gray-800/80 to-gray-900/90">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h3 className="heading-tertiary text-2xl mb-2">
+                {editingActivity ? '✏️ Edit Activity' : '➕ Add Activity'}
+              </h3>
+              <p className="text-cyan-400/70 text-sm">{selectedDate?.toLocaleDateString()} at {formData.start_time}</p>
+            </div>
             {editingActivity && (
               <button
                 type="button"
                 onClick={() => handleDeleteActivity(editingActivity.id)}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold"
+                className="btn-neon-purple px-6 py-3 text-sm bg-gradient-to-r from-red-600 to-red-500 shadow-lg shadow-red-500/40 hover:shadow-red-500/70"
               >
-                🗑️ Delete
+                🗑️ Delete Activity
               </button>
             )}
           </div>
@@ -419,11 +449,14 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
               </div>
             )}
 
-            <div className="flex gap-3">
+            <div className="flex gap-4 pt-2">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-2 px-4 rounded-lg transition"
+                className="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:opacity-50 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-1 text-lg border border-cyan-400 shadow-lg hover:shadow-2xl"
+                style={{
+                  boxShadow: '0 0 20px rgba(0, 188, 212, 0.4), inset 0 0 10px rgba(0, 188, 212, 0.2)'
+                }}
               >
                 {isLoading ? '⏳ Saving...' : editingActivity ? '✅ Update Activity' : '✅ Add Activity'}
               </button>
@@ -433,7 +466,7 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                   setShowForm(false);
                   setEditingActivity(null);
                 }}
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-lg transition"
+                className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-1 text-lg border border-gray-500"
               >
                 Cancel
               </button>
@@ -443,22 +476,32 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
       )}
 
       {viewMode === 'month' && (
-        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
-          <div className="flex justify-between items-center mb-6">
-            <button onClick={prevMonth} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">← Prev</button>
-            <h3 className="text-2xl font-bold text-white">{monthName}</h3>
-            <button onClick={nextMonth} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Next →</button>
+        <div className="futuristic-card p-8 border border-cyan-500/30">
+          <div className="flex justify-between items-center mb-8">
+            <button 
+              onClick={prevMonth} 
+              className="btn-neon-purple px-6 py-3 text-base font-bold transition-all"
+            >
+              ← Previous Month
+            </button>
+            <h3 className="heading-secondary text-3xl">{monthName}</h3>
+            <button 
+              onClick={nextMonth} 
+              className="btn-neon-purple px-6 py-3 text-base font-bold transition-all"
+            >
+              Next Month →
+            </button>
           </div>
 
-          <div className="grid grid-cols-7 gap-2 mb-4">
+          <div className="grid grid-cols-7 gap-3 mb-6">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="text-center text-gray-400 font-bold text-sm py-2">
+              <div key={day} className="text-center text-cyan-300 font-bold text-base py-4 px-2 rounded-lg bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20">
                 {day}
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-7 gap-4">
             {days.map((date, idx) => {
               const dateActivities = date ? getActivitiesForDateAndTime(date) : [];
               const isToday = date && date.toDateString() === today.toDateString();
@@ -467,24 +510,24 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
               return (
                 <div
                   key={idx}
-                  className={`min-h-32 p-2 rounded-lg border cursor-pointer transition hover:border-blue-400 ${
-                    !date ? 'bg-gray-900' :
-                    isToday ? 'border-blue-500 bg-blue-900' :
-                    isCurrentMonth ? 'border-gray-600 bg-gray-700 hover:bg-gray-650' :
-                    'border-gray-700 bg-gray-800 opacity-50'
+                  className={`min-h-40 p-4 rounded-xl border cursor-pointer transition-all duration-300 ${
+                    !date ? 'bg-transparent' :
+                    isToday ? 'border-cyan-400 bg-gradient-to-br from-cyan-600/20 to-purple-600/10 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50' :
+                    isCurrentMonth ? 'border-cyan-500/20 bg-gradient-to-br from-gray-800/60 to-gray-900/40 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-500/20' :
+                    'border-gray-700/30 bg-gray-900/30 opacity-40'
                   }`}
                   onClick={() => date && handleQuickAdd(date)}
                 >
                   {date && (
                     <>
-                      <p className={`text-sm font-bold mb-1 ${isToday ? 'text-blue-200' : isCurrentMonth ? 'text-white' : 'text-gray-400'}`}>
+                      <p className={`text-base font-bold mb-3 ${isToday ? 'text-cyan-200' : isCurrentMonth ? 'text-white' : 'text-gray-400'}`}>
                         {date.getDate()}
                       </p>
-                      <div className="space-y-1 mb-2 text-xs">
+                      <div className="space-y-2 mb-3 text-xs">
                         {dateActivities.map(activity => (
                           <div
                             key={activity.id}
-                            className="bg-blue-600 text-white px-1.5 py-0.5 rounded truncate hover:bg-blue-500 cursor-pointer transition"
+                            className="bg-gradient-to-r from-cyan-600 to-cyan-500 text-white px-2 py-1.5 rounded-lg truncate hover:from-cyan-500 hover:to-cyan-400 cursor-pointer transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 font-bold"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleEditActivity(activity);
@@ -496,13 +539,13 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                         ))}
                       </div>
                       <button
-                        className="text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-0.5 rounded w-full"
+                        className="text-sm bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white px-3 py-2 rounded-lg w-full font-bold transition-all shadow-lg shadow-green-500/20 hover:shadow-green-500/40"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleQuickAdd(date);
                         }}
                       >
-                        + Add
+                        + Add Activity
                       </button>
                     </>
                   )}

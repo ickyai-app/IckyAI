@@ -204,13 +204,14 @@ export default function Dashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as TabType)}
-                className={`px-5 py-4 font-semibold text-sm whitespace-nowrap transition-all duration-200 border-b-2 rounded-t-lg ${
+                className={`px-6 py-5 font-bold text-base whitespace-nowrap transition-all duration-300 border-b-2 rounded-t-lg transform hover:-translate-y-1 ${
                   activeTab === tab.id
-                    ? 'border-cyan-400 text-cyan-300 bg-gradient-to-b from-cyan-950 to-transparent shadow-lg'
+                    ? 'border-cyan-400 text-cyan-300 bg-gradient-to-b from-cyan-950 to-transparent shadow-2xl'
                     : 'border-transparent text-gray-400 hover:text-cyan-300 hover:bg-gradient-to-b hover:from-gray-900 hover:to-transparent'
                 }`}
                 style={activeTab === tab.id ? {
-                  textShadow: '0 0 10px rgba(0, 188, 212, 0.6)'
+                  textShadow: '0 0 15px rgba(0, 188, 212, 0.8), 0 0 30px rgba(0, 188, 212, 0.4)',
+                  boxShadow: '0 0 20px rgba(0, 188, 212, 0.4), inset 0 2px 10px rgba(0, 188, 212, 0.2)'
                 } : {}}
               >
                 {tab.label}
