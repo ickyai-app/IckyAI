@@ -51,20 +51,22 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-    }, 60000); // Update every minute
+    }, 60000);
     return () => clearInterval(timer);
   }, []);
-
-  const timeToPixels = (timeStr: string) => {
-    const [hours, mins] = timeStr.split(':').map(Number);
-    return (hours * 60 + mins - 8 * 60) * 1.5; // Assuming 8am start, 1.5px per minute
-  };
 
   const getCurrentTimePercentage = () => {
     const hours = currentTime.getHours();
     const mins = currentTime.getMinutes();
-    const totalMins = hours * 60 + mins - 8 * 60; // Assuming 8am start
-    return (totalMins / (16 * 60)) * 100; // 16 hours (8am-12am)
+    const totalMins = hours * 60 + mins - 8 * 60;
+    return (totalMins / (16 * 60)) * 100;
+  };
+
+  const getWeekStart = (date: Date) => {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day;
+    return new Date(d.setDate(diff));
   };
 
   const getDaysInMonth = (date: Date) => {
@@ -199,9 +201,22 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
     setCurrentDate(new Date(currentDate.getTime() + 24 * 60 * 60 * 1000));
   };
 
+  const prevWeek = () => {
+    setCurrentDate(new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000));
+  };
+
+  const nextWeek = () => {
+    setCurrentDate(new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000));
+  };
+
   const today = new Date();
   const isToday = currentDate.toDateString() === today.toDateString();
-  const hours = Array.from({ length: 16 }, (_, i) => i + 8); // 8am to 12am
+  const hours = Array.from({ length: 16 }, (_, i) => i + 8);
+
+  // Week view dates
+  const weekStart = getWeekStart(currentDate);
+  const weekDays = Array.from({ length: 7 }, (_, i) => new Date(weekStart.getTime() + i * 24 * 60 * 60 * 1000));
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   return (
     <div className="space-y-6">
@@ -417,6 +432,97 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
         </div>
       )}
 
+      {viewMode === 'week' && (
+        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
+          <div className="flex justify-between items-center mb-6">
+            <button onClick={prevWeek} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">← Prev Week</button>
+            <h3 className="text-2xl font-bold text-white">
+              {weekStart.toLocaleDateString('default', { month: 'short', day: 'numeric' })} - {new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString('default', { month: 'short', day: 'numeric' })}
+            </h3>
+            <button onClick={nextWeek} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Next Week →</button>
+          </div>
+
+          {/* Week Timeline View */}
+          <div className="overflow-x-auto">
+            <div className="min-w-full">
+              {/* Day headers */}
+              <div className="grid gap-0" style={{ gridTemplateColumns: '80px repeat(7, 1fr)' }}>
+                <div className="bg-gray-900 p-2"></div>
+                {weekDays.map((day, idx) => {
+                  const isCurrentDay = day.toDateString() === today.toDateString();
+                  return (
+                    <div key={idx} className={`p-3 text-center border-b-2 ${isCurrentDay ? 'border-red-500 bg-red-900' : 'border-gray-600 bg-gray-700'}`}>
+                      <p className={`font-bold ${isCurrentDay ? 'text-red-300' : 'text-white'}`}>{dayNames[day.getDay()]}</p>
+                      <p className={`text-sm ${isCurrentDay ? 'text-red-200' : 'text-gray-300'}`}>{day.getDate()}</p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Hours and activities */}
+              <div className="grid gap-0" style={{ gridTemplateColumns: '80px repeat(7, 1fr)' }}>
+                {hours.map(hour => (
+                  <div key={`hour-${hour}`} className="contents">
+                    {/* Hour label */}
+                    <div className="bg-gray-900 p-2 border-b border-gray-700 text-gray-400 text-xs font-bold sticky left-0 z-10">
+                      {String(hour).padStart(2, '0')}:00
+                    </div>
+
+                    {/* Activity slots for each day */}
+                    {weekDays.map((day, dayIdx) => (
+                      <div
+                        key={`${hour}-${dayIdx}`}
+                        className="relative min-h-16 border-b border-r border-gray-700 bg-gray-750 hover:bg-gray-700 transition cursor-pointer"
+                        onClick={() => handleQuickAdd(day)}
+                      >
+                        {/* Current time line */}
+                        {day.toDateString() === today.toDateString() && hour === today.getHours() && (
+                          <div className="absolute top-0 left-0 right-0 h-1 bg-red-600 z-20"></div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+
+              {/* Activities overlay */}
+              <div className="absolute mt-40 pointer-events-none">
+                {weekDays.map((day, dayIdx) => {
+                  const dayActivities = getActivitiesForDateAndTime(day);
+                  return dayActivities.map(activity => {
+                    const startHour = parseInt(activity.start_time?.split(':')[0] || '8');
+                    const startMin = parseInt(activity.start_time?.split(':')[1] || '0');
+                    const endHour = parseInt(activity.end_time?.split(':')[0] || '9');
+                    const endMin = parseInt(activity.end_time?.split(':')[1] || '0');
+
+                    const topOffset = ((startHour - 8) * 64 + (startMin / 60) * 64);
+                    const height = ((endHour - startHour) * 64 + ((endMin - startMin) / 60) * 64);
+
+                    return (
+                      <div
+                        key={activity.id}
+                        className="absolute bg-gradient-to-r from-blue-600 to-blue-500 border-2 border-blue-400 p-2 rounded shadow-lg pointer-events-auto hover:shadow-xl transition text-xs text-white cursor-pointer"
+                        style={{
+                          left: `calc(80px + ${dayIdx * (100 / 7)}% + 4px)`,
+                          top: `${topOffset + 100}px`,
+                          width: `calc(${100 / 7}% - 8px)`,
+                          height: `${Math.max(height, 40)}px`,
+                          zIndex: 10
+                        }}
+                        onClick={() => handleQuickAdd(day)}
+                      >
+                        <div className="font-bold">{activity.start_time}</div>
+                        <div className="truncate">{activity.account_name}</div>
+                      </div>
+                    );
+                  });
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {viewMode === 'day' && (
         <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
           <div className="flex justify-between items-center mb-6">
@@ -432,10 +538,8 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
             + Add Activity for Today
           </button>
 
-          {/* Timeline View */}
           <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
             <div className="relative">
-              {/* Hour labels and lines */}
               <div className="space-y-12">
                 {hours.map(hour => (
                   <div key={hour} className="relative">
@@ -447,7 +551,6 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                 ))}
               </div>
 
-              {/* Current time indicator (red line) */}
               {isToday && (
                 <div
                   className="absolute top-0 left-0 w-full h-1 bg-red-600 shadow-lg"
@@ -464,7 +567,6 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                 </div>
               )}
 
-              {/* Activities */}
               <div className="absolute top-0 left-16 right-0 space-y-2">
                 {getActivitiesForDateAndTime(currentDate).map(activity => {
                   const startMins = (parseInt(activity.start_time?.split(':')[0] || '0') * 60 + parseInt(activity.start_time?.split(':')[1] || '0') - 8 * 60) * 1.5;
@@ -494,12 +596,6 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
           {getActivitiesForDateAndTime(currentDate).length === 0 && (
             <p className="text-gray-400 text-center py-12">No activities scheduled for this day</p>
           )}
-        </div>
-      )}
-
-      {viewMode === 'week' && (
-        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
-          <p className="text-gray-400 text-center py-12">Week view coming soon! Use Day view for detailed scheduling.</p>
         </div>
       )}
 
