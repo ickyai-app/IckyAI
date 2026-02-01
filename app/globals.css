@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+/* Calendar Styles */
+.calendar-container {
+  @apply bg-white rounded-lg shadow-lg p-6 border border-slate-200;
+}
+
+.calendar-header {
+  @apply flex justify-between items-center mb-6 border-b border-slate-200 pb-4;
+}
+
+.calendar-grid {
+  @apply grid gap-2;
+}
+
+.calendar-day {
+  @apply p-3 bg-slate-50 rounded-lg border border-slate-200 hover:bg-slate-100 transition;
+}
+
+.calendar-day.today {
+  @apply bg-blue-50 border-blue-300;
+}
+
+.calendar-day.has-activity {
+  @apply bg-amber-50 border-amber-300;
+}
+
+.hour-block {
+  @apply relative min-h-12 border-b border-slate-200 hover:bg-blue-50 transition cursor-pointer;
+}
+
+.current-time-indicator {
+  @apply absolute left-0 right-0 border-t-2 border-red-500 h-0 w-full;
+  z-index: 10;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-2xl p-6 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 bg-slate-200 text-slate-900 rounded-lg font-medium hover:bg-slate-300 transition;
+}
+
+.btn-danger {
+  @apply px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition;
+}
+
+.btn-small {
+  @apply px-2 py-1 text-sm rounded hover:bg-slate-100 transition;
+}
+
+/* Card Styles */
+.card {
+  @apply bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition;
+}
+
+.card-header {
+  @apply font-semibold text-slate-900 mb-2 text-lg;
+}
+
+.card-subtext {
+  @apply text-slate-600 text-sm;
+}
+
+/* Input Styles */
+input, textarea, select {
+  @apply px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+}
+
+/* Tab Styles */
+.tabs {
+  @apply flex gap-2 border-b border-slate-200;
+}
+
+.tab {
+  @apply px-4 py-2 font-medium text-slate-600 cursor-pointer border-b-2 border-transparent hover:text-slate-900 transition;
+}
+
+.tab.active {
+  @apply text-blue-600 border-b-2 border-blue-600;
+}
+
+/* Activity/Event Badge */
+.activity-badge {
+  @apply inline-block px-2 py-1 rounded text-xs font-semibold;
+}
+
+.activity-call {
+  @apply bg-purple-100 text-purple-800;
+}
+
+.activity-email {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.activity-visit {
+  @apply bg-green-100 text-green-800;
+}
+
+.activity-quote {
+  @apply bg-orange-100 text-orange-800;
+}
