@@ -33,6 +33,7 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month');
   const [showForm, setShowForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState('14:00');
   const [currentTime, setCurrentTime] = useState(new Date());
   const [formData, setFormData] = useState({
     account_id: '',
@@ -102,17 +103,21 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
     }));
   };
 
-  const handleQuickAdd = (date: Date) => {
+  const handleQuickAdd = (date: Date, time?: string) => {
     setSelectedDate(date);
+    const timeToUse = time || '14:00';
+    const [hour, min] = timeToUse.split(':');
+    const endHour = (parseInt(hour) + 1).toString().padStart(2, '0');
+    
     setFormData({
       account_id: '',
       type: 'call',
       contact: '',
       notes: '',
-      duration: '',
+      duration: '60',
       outcome: 'interested',
-      start_time: '14:00',
-      end_time: '15:00',
+      start_time: timeToUse,
+      end_time: `${endHour}:${min}`,
     });
     setShowForm(true);
     setMessage('');
@@ -147,18 +152,21 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
       }
 
       setMessage('✅ Activity added successfully!');
+      setTimeout(() => {
+        setShowForm(false);
+        onActivityAdded?.(); // Refresh data in all views
+      }, 1000);
+      
       setFormData({
         account_id: '',
         type: 'call',
         contact: '',
         notes: '',
-        duration: '',
+        duration: '60',
         outcome: 'interested',
         start_time: '14:00',
         end_time: '15:00',
       });
-      setShowForm(false);
-      onActivityAdded?.();
     } catch (error) {
       setMessage(`❌ Error adding activity`);
     } finally {
@@ -230,9 +238,9 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
       </div>
 
       {showForm && (
-        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6 mb-6">
+        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6 mb-6 sticky top-20 z-50">
           <h3 className="text-xl font-bold text-white mb-4">
-            ➕ Add Activity for {selectedDate?.toLocaleDateString()}
+            ➕ Add Activity for {selectedDate?.toLocaleDateString()} at {formData.start_time}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -442,9 +450,8 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
             <button onClick={nextWeek} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Next Week →</button>
           </div>
 
-          {/* Week Timeline View */}
           <div className="overflow-x-auto">
-            <div className="min-w-full">
+            <div className="min-w-full bg-gray-900 rounded-lg">
               {/* Day headers */}
               <div className="grid gap-0" style={{ gridTemplateColumns: '80px repeat(7, 1fr)' }}>
                 <div className="bg-gray-900 p-2"></div>
@@ -459,64 +466,50 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                 })}
               </div>
 
-              {/* Hours and activities */}
-              <div className="grid gap-0" style={{ gridTemplateColumns: '80px repeat(7, 1fr)' }}>
+              {/* Hours and time slots */}
+              <div className="relative">
                 {hours.map(hour => (
-                  <div key={`hour-${hour}`} className="contents">
-                    {/* Hour label */}
+                  <div key={`hour-${hour}`} className="grid gap-0" style={{ gridTemplateColumns: '80px repeat(7, 1fr)' }}>
                     <div className="bg-gray-900 p-2 border-b border-gray-700 text-gray-400 text-xs font-bold sticky left-0 z-10">
                       {String(hour).padStart(2, '0')}:00
                     </div>
 
-                    {/* Activity slots for each day */}
-                    {weekDays.map((day, dayIdx) => (
-                      <div
-                        key={`${hour}-${dayIdx}`}
-                        className="relative min-h-16 border-b border-r border-gray-700 bg-gray-750 hover:bg-gray-700 transition cursor-pointer"
-                        onClick={() => handleQuickAdd(day)}
-                      >
-                        {/* Current time line */}
-                        {day.toDateString() === today.toDateString() && hour === today.getHours() && (
-                          <div className="absolute top-0 left-0 right-0 h-1 bg-red-600 z-20"></div>
-                        )}
-                      </div>
-                    ))}
+                    {weekDays.map((day, dayIdx) => {
+                      const dayActivities = getActivitiesForDateAndTime(day).filter(a => {
+                        const aHour = parseInt(a.start_time?.split(':')[0] || '0');
+                        return aHour === hour;
+                      });
+
+                      return (
+                        <div
+                          key={`${hour}-${dayIdx}`}
+                          className="relative min-h-20 border-b border-r border-gray-700 bg-gray-750 hover:bg-gray-700 transition cursor-pointer"
+                          onClick={() => handleQuickAdd(day, `${String(hour).padStart(2, '0')}:00`)}
+                        >
+                          {/* Current time indicator */}
+                          {day.toDateString() === today.toDateString() && hour === today.getHours() && (
+                            <div className="absolute top-0 left-0 right-0 h-1 bg-red-600 z-20"></div>
+                          )}
+
+                          {/* Activities for this hour */}
+                          <div className="p-1 space-y-1">
+                            {dayActivities.map(activity => (
+                              <div
+                                key={activity.id}
+                                className="bg-gradient-to-r from-blue-600 to-blue-500 border border-blue-400 p-1 rounded text-xs text-white font-semibold truncate hover:shadow-lg transition"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                }}
+                              >
+                                {activity.start_time} {activity.account_name}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 ))}
-              </div>
-
-              {/* Activities overlay */}
-              <div className="absolute mt-40 pointer-events-none">
-                {weekDays.map((day, dayIdx) => {
-                  const dayActivities = getActivitiesForDateAndTime(day);
-                  return dayActivities.map(activity => {
-                    const startHour = parseInt(activity.start_time?.split(':')[0] || '8');
-                    const startMin = parseInt(activity.start_time?.split(':')[1] || '0');
-                    const endHour = parseInt(activity.end_time?.split(':')[0] || '9');
-                    const endMin = parseInt(activity.end_time?.split(':')[1] || '0');
-
-                    const topOffset = ((startHour - 8) * 64 + (startMin / 60) * 64);
-                    const height = ((endHour - startHour) * 64 + ((endMin - startMin) / 60) * 64);
-
-                    return (
-                      <div
-                        key={activity.id}
-                        className="absolute bg-gradient-to-r from-blue-600 to-blue-500 border-2 border-blue-400 p-2 rounded shadow-lg pointer-events-auto hover:shadow-xl transition text-xs text-white cursor-pointer"
-                        style={{
-                          left: `calc(80px + ${dayIdx * (100 / 7)}% + 4px)`,
-                          top: `${topOffset + 100}px`,
-                          width: `calc(${100 / 7}% - 8px)`,
-                          height: `${Math.max(height, 40)}px`,
-                          zIndex: 10
-                        }}
-                        onClick={() => handleQuickAdd(day)}
-                      >
-                        <div className="font-bold">{activity.start_time}</div>
-                        <div className="truncate">{activity.account_name}</div>
-                      </div>
-                    );
-                  });
-                })}
               </div>
             </div>
           </div>
@@ -539,24 +532,44 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
           </button>
 
           <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-            <div className="relative">
-              <div className="space-y-12">
-                {hours.map(hour => (
-                  <div key={hour} className="relative">
-                    <div className="flex items-start">
-                      <div className="w-12 text-gray-400 text-sm font-semibold">{String(hour).padStart(2, '0')}:00</div>
-                      <div className="flex-1 ml-4 border-t border-gray-700"></div>
-                    </div>
+            <div className="relative space-y-12">
+              {hours.map(hour => (
+                <div
+                  key={hour}
+                  className="relative cursor-pointer hover:bg-gray-800 rounded transition p-2 -m-2"
+                  onClick={() => handleQuickAdd(currentDate, `${String(hour).padStart(2, '0')}:00`)}
+                >
+                  <div className="flex items-start">
+                    <div className="w-12 text-gray-400 text-sm font-semibold">{String(hour).padStart(2, '0')}:00</div>
+                    <div className="flex-1 ml-4 border-t border-gray-700"></div>
                   </div>
-                ))}
-              </div>
 
+                  {/* Activities at this hour */}
+                  <div className="ml-16 mt-1 space-y-1">
+                    {getActivitiesForDateAndTime(currentDate)
+                      .filter(a => parseInt(a.start_time?.split(':')[0] || '0') === hour)
+                      .map(activity => (
+                        <div
+                          key={activity.id}
+                          className="bg-gradient-to-r from-blue-600 to-blue-500 border-2 border-blue-400 p-3 rounded-lg shadow-lg hover:shadow-xl transition"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="text-xs text-white font-bold">{activity.start_time} - {activity.end_time}</div>
+                          <div className="text-xs text-blue-100 font-semibold">{activity.account_name}</div>
+                          <div className="text-xs text-blue-200">{activity.type}</div>
+                          {activity.notes && <div className="text-xs text-blue-200 mt-1">{activity.notes}</div>}
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              ))}
+
+              {/* Current time indicator for today */}
               {isToday && (
                 <div
-                  className="absolute top-0 left-0 w-full h-1 bg-red-600 shadow-lg"
+                  className="absolute top-0 left-0 w-full h-1 bg-red-600 shadow-lg z-20"
                   style={{
-                    top: `${getCurrentTimePercentage()}%`,
-                    zIndex: 10
+                    top: `${getCurrentTimePercentage()}%`
                   }}
                 >
                   <div className="flex items-center ml-4 -mt-2">
@@ -566,30 +579,6 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                   </div>
                 </div>
               )}
-
-              <div className="absolute top-0 left-16 right-0 space-y-2">
-                {getActivitiesForDateAndTime(currentDate).map(activity => {
-                  const startMins = (parseInt(activity.start_time?.split(':')[0] || '0') * 60 + parseInt(activity.start_time?.split(':')[1] || '0') - 8 * 60) * 1.5;
-                  const endMins = (parseInt(activity.end_time?.split(':')[0] || '0') * 60 + parseInt(activity.end_time?.split(':')[1] || '0') - 8 * 60) * 1.5;
-                  const height = endMins - startMins;
-
-                  return (
-                    <div
-                      key={activity.id}
-                      className="absolute left-4 right-4 bg-gradient-to-r from-blue-600 to-blue-500 border-2 border-blue-400 p-3 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition"
-                      style={{
-                        top: `${startMins}px`,
-                        height: `${Math.max(height, 40)}px`,
-                        minWidth: '200px'
-                      }}
-                    >
-                      <div className="text-xs text-white font-bold">{activity.start_time} - {activity.end_time}</div>
-                      <div className="text-xs text-blue-100 font-semibold">{activity.account_name}</div>
-                      <div className="text-xs text-blue-200">{activity.type}</div>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
           </div>
 
