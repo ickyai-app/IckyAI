@@ -557,26 +557,36 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
       )}
 
       {viewMode === 'week' && (
-        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
-          <div className="flex justify-between items-center mb-6">
-            <button onClick={prevWeek} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">← Prev Week</button>
-            <h3 className="text-2xl font-bold text-white">
+        <div className="futuristic-card p-8 border border-cyan-500/30">
+          <div className="flex justify-between items-center mb-8">
+            <button 
+              onClick={prevWeek} 
+              className="btn-neon-purple px-6 py-3 text-base font-bold transition-all"
+            >
+              ← Previous Week
+            </button>
+            <h3 className="heading-secondary text-3xl">
               {weekStart.toLocaleDateString('default', { month: 'short', day: 'numeric' })} - {new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString('default', { month: 'short', day: 'numeric' })}
             </h3>
-            <button onClick={nextWeek} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Next Week →</button>
+            <button 
+              onClick={nextWeek} 
+              className="btn-neon-purple px-6 py-3 text-base font-bold transition-all"
+            >
+              Next Week →
+            </button>
           </div>
 
           <div className="overflow-x-auto">
-            <div className="min-w-full bg-gray-900 rounded-lg">
+            <div className="min-w-full bg-gradient-to-b from-gray-900 to-gray-800/50 rounded-lg border border-cyan-500/20">
               {/* Day headers */}
-              <div className="grid gap-0" style={{ gridTemplateColumns: '80px repeat(7, 1fr)' }}>
-                <div className="bg-gray-900 p-2"></div>
+              <div className="grid gap-0" style={{ gridTemplateColumns: '90px repeat(7, 1fr)' }}>
+                <div className="bg-gradient-to-r from-gray-900 to-gray-800/50 p-4"></div>
                 {weekDays.map((day, idx) => {
                   const isCurrentDay = day.toDateString() === today.toDateString();
                   return (
-                    <div key={idx} className={`p-3 text-center border-b-2 ${isCurrentDay ? 'border-red-500 bg-red-900' : 'border-gray-600 bg-gray-700'}`}>
-                      <p className={`font-bold ${isCurrentDay ? 'text-red-300' : 'text-white'}`}>{dayNames[day.getDay()]}</p>
-                      <p className={`text-sm ${isCurrentDay ? 'text-red-200' : 'text-gray-300'}`}>{day.getDate()}</p>
+                    <div key={idx} className={`p-4 text-center border-b-2 ${isCurrentDay ? 'border-cyan-400 bg-gradient-to-b from-cyan-600/20 to-cyan-500/10' : 'border-cyan-500/20 bg-gradient-to-b from-gray-800/80 to-gray-900/50'}`}>
+                      <p className={`font-bold text-base ${isCurrentDay ? 'text-cyan-300' : 'text-cyan-200'}`}>{dayNames[day.getDay()]}</p>
+                      <p className={`text-sm font-semibold mt-1 ${isCurrentDay ? 'text-cyan-200' : 'text-gray-400'}`}>{day.getDate()}</p>
                     </div>
                   );
                 })}
@@ -635,18 +645,31 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
       )}
 
       {viewMode === 'day' && (
-        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
-          <div className="flex justify-between items-center mb-6">
-            <button onClick={prevDay} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">← Prev Day</button>
-            <h3 className="text-2xl font-bold text-white">{currentDate.toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric' })} {isToday && <span className="text-red-400 ml-2">● NOW</span>}</h3>
-            <button onClick={nextDay} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Next Day →</button>
+        <div className="futuristic-card p-8 border border-cyan-500/30">
+          <div className="flex justify-between items-center mb-8">
+            <button 
+              onClick={prevDay} 
+              className="btn-neon-purple px-6 py-3 text-base font-bold transition-all"
+            >
+              ← Previous Day
+            </button>
+            <div className="text-center">
+              <h3 className="heading-secondary text-3xl mb-2">{currentDate.toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric' })}</h3>
+              {isToday && <span className="inline-block bg-gradient-to-r from-red-600 to-pink-500 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg shadow-red-500/40">● LIVE TODAY</span>}
+            </div>
+            <button 
+              onClick={nextDay} 
+              className="btn-neon-purple px-6 py-3 text-base font-bold transition-all"
+            >
+              Next Day →
+            </button>
           </div>
 
           <button
             onClick={() => handleQuickAdd(currentDate)}
-            className="mb-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg w-full"
+            className="mb-8 w-full btn-neon-cyan py-4 px-6 text-lg font-bold transition-all shadow-lg shadow-cyan-500/50 hover:shadow-cyan-500/70"
           >
-            + Add Activity for Today
+            + Add Activity for This Day
           </button>
 
           <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
@@ -711,27 +734,27 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
       )}
 
       {/* Activity Summary */}
-      <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
-        <h3 className="text-xl font-bold text-white mb-4">📊 This Month's Activity</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-gray-700 p-4 rounded-lg">
-            <p className="text-gray-400 text-sm">Total Activities</p>
-            <p className="text-3xl font-bold text-blue-400">{activities.filter(a => {
+      <div className="futuristic-card p-8 border border-cyan-500/30">
+        <h3 className="heading-secondary text-3xl mb-8">📊 This Month's Activity</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="bg-gradient-to-br from-cyan-600/20 to-cyan-500/10 p-6 rounded-xl border border-cyan-500/30 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-500/30 transition-all">
+            <p className="text-cyan-300/70 text-sm font-semibold mb-2">Total Activities</p>
+            <p className="text-4xl font-black text-cyan-300">{activities.filter(a => {
               const aDate = new Date(a.date);
               return aDate.getMonth() === currentDate.getMonth();
             }).length}</p>
           </div>
-          <div className="bg-gray-700 p-4 rounded-lg">
-            <p className="text-gray-400 text-sm">Calls</p>
-            <p className="text-3xl font-bold text-blue-400">{activities.filter(a => a.type === 'call' && new Date(a.date).getMonth() === currentDate.getMonth()).length}</p>
+          <div className="bg-gradient-to-br from-blue-600/20 to-blue-500/10 p-6 rounded-xl border border-blue-500/30 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/30 transition-all">
+            <p className="text-blue-300/70 text-sm font-semibold mb-2">☎️ Calls</p>
+            <p className="text-4xl font-black text-blue-300">{activities.filter(a => a.type === 'call' && new Date(a.date).getMonth() === currentDate.getMonth()).length}</p>
           </div>
-          <div className="bg-gray-700 p-4 rounded-lg">
-            <p className="text-gray-400 text-sm">Emails</p>
-            <p className="text-3xl font-bold text-green-400">{activities.filter(a => a.type === 'email' && new Date(a.date).getMonth() === currentDate.getMonth()).length}</p>
+          <div className="bg-gradient-to-br from-green-600/20 to-green-500/10 p-6 rounded-xl border border-green-500/30 hover:border-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all">
+            <p className="text-green-300/70 text-sm font-semibold mb-2">📧 Emails</p>
+            <p className="text-4xl font-black text-green-300">{activities.filter(a => a.type === 'email' && new Date(a.date).getMonth() === currentDate.getMonth()).length}</p>
           </div>
-          <div className="bg-gray-700 p-4 rounded-lg">
-            <p className="text-gray-400 text-sm">Meetings</p>
-            <p className="text-3xl font-bold text-purple-400">{activities.filter(a => a.type === 'meeting' && new Date(a.date).getMonth() === currentDate.getMonth()).length}</p>
+          <div className="bg-gradient-to-br from-purple-600/20 to-purple-500/10 p-6 rounded-xl border border-purple-500/30 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-500/30 transition-all">
+            <p className="text-purple-300/70 text-sm font-semibold mb-2">👥 Meetings</p>
+            <p className="text-4xl font-black text-purple-300">{activities.filter(a => a.type === 'meeting' && new Date(a.date).getMonth() === currentDate.getMonth()).length}</p>
           </div>
         </div>
       </div>
