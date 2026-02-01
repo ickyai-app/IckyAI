@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/lib/auth-context';
 
 interface Activity {
   id: number;
@@ -13,13 +14,33 @@ interface Activity {
   outcome: string;
 }
 
-interface ActivityCalendarProps {
-  activities: Activity[];
+interface Account {
+  id: number;
+  name: string;
 }
 
-export default function ActivityCalendar({ activities }: ActivityCalendarProps) {
+interface ActivityCalendarProps {
+  activities: Activity[];
+  accounts: Account[];
+  onActivityAdded?: () => void;
+}
+
+export default function ActivityCalendar({ activities, accounts, onActivityAdded }: ActivityCalendarProps) {
+  const { user } = useAuth();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week'>('month');
+  const [showForm, setShowForm] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [formData, setFormData] = useState({
+    account_id: '',
+    type: 'call',
+    contact: '',
+    notes: '',
+    duration: '',
+    outcome: 'interested',
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
   const getDaysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -36,6 +57,72 @@ export default function ActivityCalendar({ activities }: ActivityCalendarProps) 
              actDate.getMonth() === date.getMonth() &&
              actDate.getFullYear() === date.getFullYear();
     });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleQuickAdd = (date: Date) => {
+    setSelectedDate(date);
+    setFormData({
+      account_id: '',
+      type: 'call',
+      contact: '',
+      notes: '',
+      duration: '',
+      outcome: 'interested',
+    });
+    setShowForm(true);
+    setMessage('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !formData.account_id || !selectedDate) return;
+
+    setIsLoading(true);
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/activities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': user.id.toString()
+        },
+        body: JSON.stringify({
+          ...formData,
+          account_id: parseInt(formData.account_id),
+          duration: formData.duration ? parseInt(formData.duration) : 0,
+          date: selectedDate.toISOString()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add activity');
+      }
+
+      setMessage('✅ Activity added successfully!');
+      setFormData({
+        account_id: '',
+        type: 'call',
+        contact: '',
+        notes: '',
+        duration: '',
+        outcome: 'interested',
+      });
+      setShowForm(false);
+      onActivityAdded?.();
+    } catch (error) {
+      setMessage(`❌ Error adding activity`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -77,6 +164,124 @@ export default function ActivityCalendar({ activities }: ActivityCalendarProps) 
         </div>
       </div>
 
+      {showForm && (
+        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6 mb-6">
+          <h3 className="text-xl font-bold text-white mb-4">
+            ➕ Add Activity for {selectedDate?.toLocaleDateString()}
+          </h3>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Account *</label>
+                <select
+                  name="account_id"
+                  value={formData.account_id}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                >
+                  <option value="">Select an account</option>
+                  {accounts.map(account => (
+                    <option key={account.id} value={account.id}>
+                      {account.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Activity Type</label>
+                <select
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                >
+                  <option value="call">☎️ Call</option>
+                  <option value="email">📧 Email</option>
+                  <option value="meeting">👥 Meeting</option>
+                  <option value="follow_up">🔄 Follow-up</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Contact/Person</label>
+              <input
+                type="text"
+                name="contact"
+                value={formData.contact}
+                onChange={handleChange}
+                placeholder="John Smith"
+                className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Notes</label>
+              <textarea
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                placeholder="What will you discuss?"
+                rows={2}
+                className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Duration (minutes)</label>
+                <input
+                  type="number"
+                  name="duration"
+                  value={formData.duration}
+                  onChange={handleChange}
+                  placeholder="15"
+                  className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Outcome</label>
+                <select
+                  name="outcome"
+                  value={formData.outcome}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                >
+                  <option value="interested">Interested</option>
+                  <option value="not_interested">Not Interested</option>
+                  <option value="need_follow_up">Need Follow-up</option>
+                  <option value="closed_won">Closed Won</option>
+                </select>
+              </div>
+            </div>
+
+            {message && (
+              <div className={message.startsWith('✅') ? 'p-3 rounded text-sm border bg-green-900 text-green-300 border-green-700' : 'p-3 rounded text-sm border bg-red-900 text-red-300 border-red-700'}>
+                {message}
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-2 px-4 rounded-lg transition"
+              >
+                {isLoading ? '⏳ Adding...' : '✅ Add Activity'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-lg transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
       {viewMode === 'month' && (
         <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
           <div className="flex justify-between items-center mb-6">
@@ -102,25 +307,35 @@ export default function ActivityCalendar({ activities }: ActivityCalendarProps) 
               return (
                 <div
                   key={idx}
-                  className={`min-h-24 p-2 rounded-lg border ${
+                  className={`min-h-28 p-2 rounded-lg border cursor-pointer transition hover:border-blue-400 ${
                     !date ? 'bg-gray-900' :
                     isToday ? 'border-blue-500 bg-blue-900' :
-                    isCurrentMonth ? 'border-gray-600 bg-gray-700' :
+                    isCurrentMonth ? 'border-gray-600 bg-gray-700 hover:bg-gray-650' :
                     'border-gray-700 bg-gray-800 opacity-50'
                   }`}
+                  onClick={() => date && handleQuickAdd(date)}
                 >
                   {date && (
                     <>
                       <p className={`text-sm font-bold mb-1 ${isToday ? 'text-blue-200' : isCurrentMonth ? 'text-white' : 'text-gray-400'}`}>
                         {date.getDate()}
                       </p>
-                      <div className="space-y-1">
+                      <div className="space-y-1 mb-2">
                         {dateActivities.map(activity => (
                           <div key={activity.id} className="text-xs bg-blue-600 text-white px-2 py-1 rounded truncate hover:bg-blue-500">
                             {typeIcons[activity.type] || '📝'} {activity.account_name.split(' ')[0]}
                           </div>
                         ))}
                       </div>
+                      <button
+                        className="text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-0.5 rounded w-full"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleQuickAdd(date);
+                        }}
+                      >
+                        + Add
+                      </button>
                     </>
                   )}
                 </div>
@@ -132,7 +347,7 @@ export default function ActivityCalendar({ activities }: ActivityCalendarProps) 
 
       {viewMode === 'week' && (
         <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
-          <p className="text-gray-400 text-center py-12">Week view coming soon! This will show your activities broken down by day of the week.</p>
+          <p className="text-gray-400 text-center py-12">Week view coming soon!</p>
         </div>
       )}
 

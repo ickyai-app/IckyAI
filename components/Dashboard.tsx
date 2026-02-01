@@ -311,7 +311,7 @@ export default function Dashboard() {
         {activeTab === 'accounts' && <AccountsList accounts={accounts} />}
         {activeTab === 'add-account' && <AccountForm onAccountAdded={handleAccountAdded} />}
         {activeTab === 'activities' && <ActivityLog activities={activities} accounts={accounts} />}
-        {activeTab === 'activity-calendar' && <ActivityCalendar activities={activities} />}
+        {activeTab === 'activity-calendar' && <ActivityCalendar activities={activities} accounts={accounts} onActivityAdded={handleActivityAdded} />}
         {activeTab === 'templates' && <TemplatesLibrary userId={user?.id} />}
         {activeTab === 'coaching' && <AICoaching accounts={accounts} activities={activities} />}
       </main>
