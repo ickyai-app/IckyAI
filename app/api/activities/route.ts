@@ -11,10 +11,21 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const body = await request.json();
   
+  // Find account name from mockAccounts
+  const mockAccounts = [
+    { id: 1, name: 'Tech Solutions Inc' },
+    { id: 2, name: 'Global Industries' },
+    { id: 3, name: 'Local Services LLC' },
+  ];
+  
+  const account = mockAccounts.find(a => a.id === body.account_id);
+  const account_name = account?.name || 'Unknown Account';
+  
   const newActivity = {
     id: mockActivities.length + 1,
+    account_name: account_name,
     ...body,
-    date: new Date().toISOString()
+    date: body.date || new Date().toISOString()
   };
 
   mockActivities.push(newActivity);

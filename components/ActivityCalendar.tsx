@@ -323,7 +323,7 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                       <div className="space-y-1 mb-2">
                         {dateActivities.map(activity => (
                           <div key={activity.id} className="text-xs bg-blue-600 text-white px-2 py-1 rounded truncate hover:bg-blue-500">
-                            {typeIcons[activity.type] || '📝'} {activity.account_name.split(' ')[0]}
+                            {typeIcons[activity.type] || '📝'} {(activity.account_name || 'Activity').split(' ')[0]}
                           </div>
                         ))}
                       </div>
