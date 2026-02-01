@@ -221,73 +221,58 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-lg">
         {activeTab === 'dashboard' && (
           <div className="space-y-8">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              <div className="p-6 rounded-xl border border-cyan-500 backdrop-blur-sm" style={{
-                background: 'linear-gradient(135deg, rgba(0, 188, 212, 0.15), rgba(0, 188, 212, 0.05))',
-                boxShadow: '0 0 30px rgba(0, 188, 212, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-              }}>
+              <div className="p-6 rounded-xl border border-blue-500 bg-gradient-to-br from-blue-900 to-blue-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-cyan-300 text-xs font-bold tracking-widest">TOTAL ACCOUNTS</p>
-                    <p className="text-4xl font-black text-cyan-400 mt-2" style={{ textShadow: '0 0 10px rgba(0, 188, 212, 0.8)' }}>{stats.totalAccounts}</p>
+                    <p className="text-blue-200 text-xs font-bold tracking-widest">TOTAL ACCOUNTS</p>
+                    <p className="text-4xl font-black text-white mt-2">{stats.totalAccounts}</p>
                   </div>
-                  <div className="text-5xl opacity-30">👥</div>
+                  <div className="text-5xl opacity-40">👥</div>
                 </div>
               </div>
 
-              <div className="p-6 rounded-xl border border-green-500 backdrop-blur-sm" style={{
-                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05))',
-                boxShadow: '0 0 30px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-              }}>
+              <div className="p-6 rounded-xl border border-green-500 bg-gradient-to-br from-green-900 to-green-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-green-300 text-xs font-bold tracking-widest">ACTIVE DEALS</p>
-                    <p className="text-4xl font-black text-green-400 mt-2" style={{ textShadow: '0 0 10px rgba(34, 197, 94, 0.8)' }}>{stats.activeAccounts}</p>
+                    <p className="text-green-200 text-xs font-bold tracking-widest">ACTIVE DEALS</p>
+                    <p className="text-4xl font-black text-white mt-2">{stats.activeAccounts}</p>
                   </div>
-                  <div className="text-5xl opacity-30">✓</div>
+                  <div className="text-5xl opacity-40">✓</div>
                 </div>
               </div>
 
-              <div className="p-6 rounded-xl border border-purple-500 backdrop-blur-sm" style={{
-                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05))',
-                boxShadow: '0 0 30px rgba(168, 85, 247, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-              }}>
+              <div className="p-6 rounded-xl border border-purple-500 bg-gradient-to-br from-purple-900 to-purple-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-purple-300 text-xs font-bold tracking-widest">PIPELINE VALUE</p>
-                    <p className="text-4xl font-black text-purple-400 mt-2" style={{ textShadow: '0 0 10px rgba(168, 85, 247, 0.8)' }}>${(stats.totalValue / 1000).toFixed(0)}K</p>
+                    <p className="text-purple-200 text-xs font-bold tracking-widest">PIPELINE VALUE</p>
+                    <p className="text-4xl font-black text-white mt-2">${(stats.totalValue / 1000).toFixed(0)}K</p>
                   </div>
-                  <div className="text-5xl opacity-30">💰</div>
+                  <div className="text-5xl opacity-40">💰</div>
                 </div>
               </div>
 
-              <div className="p-6 rounded-xl border border-orange-500 backdrop-blur-sm" style={{
-                background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.05))',
-                boxShadow: '0 0 30px rgba(249, 115, 22, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-              }}>
+              <div className="p-6 rounded-xl border border-orange-500 bg-gradient-to-br from-orange-900 to-orange-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-orange-300 text-xs font-bold tracking-widest">ACTIVITIES</p>
-                    <p className="text-4xl font-black text-orange-400 mt-2" style={{ textShadow: '0 0 10px rgba(249, 115, 22, 0.8)' }}>{stats.recentActivities}</p>
+                    <p className="text-orange-200 text-xs font-bold tracking-widest">ACTIVITIES</p>
+                    <p className="text-4xl font-black text-white mt-2">{stats.recentActivities}</p>
                   </div>
-                  <div className="text-5xl opacity-30">📊</div>
+                  <div className="text-5xl opacity-40">📊</div>
                 </div>
               </div>
 
-              <div className="p-6 rounded-xl border border-red-500 backdrop-blur-sm" style={{
-                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05))',
-                boxShadow: '0 0 30px rgba(239, 68, 68, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-              }}>
+              <div className="p-6 rounded-xl border border-red-500 bg-gradient-to-br from-red-900 to-red-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-red-300 text-xs font-bold tracking-widest">REMINDERS</p>
-                    <p className="text-4xl font-black text-red-400 mt-2" style={{ textShadow: '0 0 10px rgba(239, 68, 68, 0.8)' }}>{stats.upcomingReminders}</p>
+                    <p className="text-red-200 text-xs font-bold tracking-widest">REMINDERS</p>
+                    <p className="text-4xl font-black text-white mt-2">{stats.upcomingReminders}</p>
                   </div>
-                  <div className="text-5xl opacity-30">🔔</div>
+                  <div className="text-5xl opacity-40">🔔</div>
                 </div>
               </div>
             </div>
@@ -297,23 +282,20 @@ export default function Dashboard() {
 
             {/* Quick Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="p-6 rounded-xl border border-cyan-500 backdrop-blur-sm" style={{
-                background: 'linear-gradient(135deg, rgba(0, 188, 212, 0.1), rgba(0, 188, 212, 0.02))',
-                boxShadow: '0 0 30px rgba(0, 188, 212, 0.2)'
-              }}>
+              <div className="p-6 rounded-xl border border-blue-600 bg-gradient-to-br from-blue-900 to-blue-800">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-2xl">🔥</span>
-                  <h3 className="font-black text-lg text-cyan-300">HOT LEADS</h3>
+                  <h3 className="font-black text-lg text-white">HOT LEADS</h3>
                 </div>
                 <div className="space-y-3">
                   {accounts
                     .filter(a => a.status === 'qualified')
                     .slice(0, 3)
                     .map(account => (
-                      <div key={account.id} className="flex justify-between items-center pb-3 border-b border-cyan-700 p-3 rounded hover:bg-cyan-950 transition">
+                      <div key={account.id} className="flex justify-between items-center pb-3 border-b border-blue-700 p-3 rounded hover:bg-blue-700 transition">
                         <div>
-                          <p className="font-bold text-cyan-300">{account.name}</p>
-                          <p className="text-xs text-cyan-400">{account.contact}</p>
+                          <p className="font-bold text-white">{account.name}</p>
+                          <p className="text-xs text-blue-300">{account.contact}</p>
                         </div>
                         <span className="text-sm font-black text-green-400">${account.deal_size.toLocaleString()}</span>
                       </div>
@@ -321,19 +303,16 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="p-6 rounded-xl border border-purple-500 backdrop-blur-sm" style={{
-                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(168, 85, 247, 0.02))',
-                boxShadow: '0 0 30px rgba(168, 85, 247, 0.2)'
-              }}>
+              <div className="p-6 rounded-xl border border-purple-600 bg-gradient-to-br from-purple-900 to-purple-800">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-2xl">📝</span>
-                  <h3 className="font-black text-lg text-purple-300">RECENT ACTIVITIES</h3>
+                  <h3 className="font-black text-lg text-white">RECENT ACTIVITIES</h3>
                 </div>
                 <div className="space-y-3">
                   {activities.slice(0, 3).map(activity => (
-                    <div key={activity.id} className="pb-3 border-b border-purple-700 p-3 rounded hover:bg-purple-950 transition">
-                      <p className="text-xs"><span className="font-bold text-purple-300">{activity.account_name}</span> <span className="text-purple-400">• {activity.type}</span></p>
-                      <p className="text-xs text-purple-500 mt-1">{new Date(activity.date).toLocaleDateString()}</p>
+                    <div key={activity.id} className="pb-3 border-b border-purple-700 p-3 rounded hover:bg-purple-700 transition">
+                      <p className="text-xs"><span className="font-bold text-white">{activity.account_name}</span> <span className="text-purple-300">• {activity.type}</span></p>
+                      <p className="text-xs text-purple-400 mt-1">{new Date(activity.date).toLocaleDateString()}</p>
                     </div>
                   ))}
                 </div>
