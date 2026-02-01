@@ -175,7 +175,7 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
       const method = editingActivity ? 'PUT' : 'POST';
       const endpoint = editingActivity ? '/api/activities' : '/api/activities';
       
-      const body = {
+      const body: any = {
         ...formData,
         account_id: parseInt(formData.account_id),
         duration: formData.duration ? parseInt(formData.duration) : 0,
