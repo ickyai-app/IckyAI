@@ -5,10 +5,14 @@ import { useAuth } from '@/lib/auth-context'
 import AccountForm from './AccountForm'
 import ActivityForm from './ActivityForm'
 import AccountsList from './AccountsList'
+import AccountsOverview from './AccountsOverview'
 import ActivityLog from './ActivityLog'
+import ActivityCalendar from './ActivityCalendar'
 import TemplatesLibrary from './TemplatesLibrary'
+import AICoaching from './AICoaching'
+import PipelineReminders from './PipelineReminders'
 
-type TabType = 'dashboard' | 'accounts' | 'add-account' | 'activities' | 'templates' | 'coaching';
+type TabType = 'dashboard' | 'accounts-overview' | 'accounts' | 'add-account' | 'activities' | 'activity-calendar' | 'templates' | 'coaching';
 
 interface Account {
   id: number;
@@ -32,13 +36,24 @@ interface Activity {
   outcome: string;
 }
 
+interface Reminder {
+  id: number;
+  account_id: number;
+  account_name: string;
+  reminder_text: string;
+  reminder_date: string;
+  completed: boolean;
+}
+
 const tabConfig = [
   { id: 'dashboard', label: '📊 Dashboard' },
+  { id: 'accounts-overview', label: '📋 Accounts Overview' },
   { id: 'accounts', label: '👥 Pipeline' },
   { id: 'add-account', label: '➕ New Account' },
   { id: 'activities', label: '📝 Activity Log' },
+  { id: 'activity-calendar', label: '📅 Calendar' },
   { id: 'templates', label: '📧 Templates' },
-  { id: 'coaching', label: '🎯 Coaching' },
+  { id: 'coaching', label: '🤖 AI Coach' },
 ]
 
 export default function Dashboard() {
@@ -46,6 +61,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [accounts, setAccounts] = useState<Account[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
+  const [reminders, setReminders] = useState<Reminder[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -55,9 +71,10 @@ export default function Dashboard() {
       try {
         const headers = { 'x-user-id': user.id.toString() }
         
-        const [accountsRes, activitiesRes] = await Promise.all([
+        const [accountsRes, activitiesRes, remindersRes] = await Promise.all([
           fetch('/api/accounts', { headers }),
-          fetch('/api/activities', { headers })
+          fetch('/api/activities', { headers }),
+          fetch('/api/reminders', { headers })
         ])
 
         if (accountsRes.ok) {
@@ -68,6 +85,11 @@ export default function Dashboard() {
         if (activitiesRes.ok) {
           const data = await activitiesRes.json()
           setActivities(data.activities || [])
+        }
+
+        if (remindersRes.ok) {
+          const data = await remindersRes.json()
+          setReminders(data.reminders || [])
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -107,6 +129,20 @@ export default function Dashboard() {
     }
   }
 
+  const handleReminderAdded = async () => {
+    if (!user) return
+    try {
+      const headers = { 'x-user-id': user.id.toString() }
+      const response = await fetch('/api/reminders', { headers })
+      if (response.ok) {
+        const data = await response.json()
+        setReminders(data.reminders || [])
+      }
+    } catch (error) {
+      console.error('Error refreshing reminders:', error)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-gray-900 to-gray-800">
@@ -122,7 +158,8 @@ export default function Dashboard() {
     totalAccounts: accounts.length,
     activeAccounts: accounts.filter(a => a.status === 'active').length,
     totalValue: accounts.reduce((sum, a) => sum + (a.deal_size || 0), 0),
-    recentActivities: activities.slice(0, 5).length
+    recentActivities: activities.slice(0, 5).length,
+    upcomingReminders: reminders.filter(r => !r.completed).length
   }
 
   return (
@@ -150,9 +187,9 @@ export default function Dashboard() {
       </header>
 
       {/* Navigation Tabs */}
-      <div className="bg-gray-800 border-b-2 border-blue-600 shadow-xl">
+      <div className="bg-gray-800 border-b-2 border-blue-600 shadow-xl overflow-x-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-1 overflow-x-auto">
+          <div className="flex gap-1">
             {tabConfig.map((tab) => (
               <button
                 key={tab.id}
@@ -174,7 +211,7 @@ export default function Dashboard() {
         {activeTab === 'dashboard' && (
           <div className="space-y-8">
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
               <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-xl shadow-lg">
                 <div className="flex items-center justify-between">
                   <div>
@@ -208,13 +245,26 @@ export default function Dashboard() {
               <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-6 rounded-xl shadow-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-orange-100 text-sm font-medium">Recent Activity</p>
+                    <p className="text-orange-100 text-sm font-medium">Activities</p>
                     <p className="text-4xl font-bold text-white mt-2">{stats.recentActivities}</p>
                   </div>
                   <div className="text-5xl opacity-20">📊</div>
                 </div>
               </div>
+
+              <div className="bg-gradient-to-br from-red-500 to-red-600 p-6 rounded-xl shadow-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-red-100 text-sm font-medium">Reminders</p>
+                    <p className="text-4xl font-bold text-white mt-2">{stats.upcomingReminders}</p>
+                  </div>
+                  <div className="text-5xl opacity-20">🔔</div>
+                </div>
+              </div>
             </div>
+
+            {/* Upcoming Reminders Section */}
+            <PipelineReminders reminders={reminders} onReminderAdded={handleReminderAdded} accounts={accounts} />
 
             {/* Quick Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -257,35 +307,13 @@ export default function Dashboard() {
           </div>
         )}
 
+        {activeTab === 'accounts-overview' && <AccountsOverview accounts={accounts} activities={activities} />}
         {activeTab === 'accounts' && <AccountsList accounts={accounts} />}
         {activeTab === 'add-account' && <AccountForm onAccountAdded={handleAccountAdded} />}
         {activeTab === 'activities' && <ActivityLog activities={activities} accounts={accounts} />}
+        {activeTab === 'activity-calendar' && <ActivityCalendar activities={activities} />}
         {activeTab === 'templates' && <TemplatesLibrary userId={user?.id} />}
-        {activeTab === 'coaching' && (
-          <div className="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700">
-            <h2 className="text-2xl font-bold text-white mb-6">💡 Daily Coaching</h2>
-            <div className="space-y-6">
-              <div className="bg-blue-900 p-6 rounded-lg border-l-4 border-blue-400">
-                <h3 className="font-bold text-blue-300 mb-3 text-lg">🎯 Top 3 Priorities</h3>
-                <ol className="list-decimal ml-5 text-blue-200 space-y-2">
-                  <li>Call your top 2 qualified leads</li>
-                  <li>Send follow-up emails to prospects from last week</li>
-                  <li>Update notes on active deals</li>
-                </ol>
-              </div>
-
-              <div className="bg-green-900 p-6 rounded-lg border-l-4 border-green-400">
-                <h3 className="font-bold text-green-300 mb-3 text-lg">📈 This Week's Goals</h3>
-                <ul className="space-y-2 text-green-200">
-                  <li>✅ Log 3+ activities per day</li>
-                  <li>✅ Add 2 new prospects</li>
-                  <li>✅ Move at least 1 deal to next stage</li>
-                  <li>✅ Complete all follow-ups</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
+        {activeTab === 'coaching' && <AICoaching accounts={accounts} activities={activities} />}
       </main>
     </div>
   )
