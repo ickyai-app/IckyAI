@@ -278,6 +278,57 @@ export default function Dashboard() {
               </div>
             </div>
 
+            {/* Big Action Buttons Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+              <button
+                onClick={() => setActiveTab('activity-calendar')}
+                className="group p-8 rounded-2xl border-2 border-cyan-400 bg-gradient-to-br from-cyan-900 to-cyan-800 hover:from-cyan-800 hover:to-cyan-700 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl text-left"
+                style={{
+                  boxShadow: '0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 20px rgba(0, 188, 212, 0.1)'
+                }}
+              >
+                <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">📅</div>
+                <h3 className="text-2xl font-black text-white mb-2">Calendar</h3>
+                <p className="text-cyan-200 font-semibold">View & manage activities</p>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('add-account')}
+                className="group p-8 rounded-2xl border-2 border-green-400 bg-gradient-to-br from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl text-left"
+                style={{
+                  boxShadow: '0 0 30px rgba(34, 197, 94, 0.3), inset 0 0 20px rgba(34, 197, 94, 0.1)'
+                }}
+              >
+                <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">➕</div>
+                <h3 className="text-2xl font-black text-white mb-2">New Account</h3>
+                <p className="text-green-200 font-semibold">Add a new client</p>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('activities')}
+                className="group p-8 rounded-2xl border-2 border-purple-400 bg-gradient-to-br from-purple-900 to-purple-800 hover:from-purple-800 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl text-left"
+                style={{
+                  boxShadow: '0 0 30px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1)'
+                }}
+              >
+                <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">📝</div>
+                <h3 className="text-2xl font-black text-white mb-2">Activities</h3>
+                <p className="text-purple-200 font-semibold">View activity log</p>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('templates')}
+                className="group p-8 rounded-2xl border-2 border-orange-400 bg-gradient-to-br from-orange-900 to-orange-800 hover:from-orange-800 hover:to-orange-700 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl text-left"
+                style={{
+                  boxShadow: '0 0 30px rgba(249, 115, 22, 0.3), inset 0 0 20px rgba(249, 115, 22, 0.1)'
+                }}
+              >
+                <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">📧</div>
+                <h3 className="text-2xl font-black text-white mb-2">Templates</h3>
+                <p className="text-orange-200 font-semibold">Email templates</p>
+              </button>
+            </div>
+
             {/* Upcoming Reminders Section */}
             <PipelineReminders reminders={reminders} onReminderAdded={handleReminderAdded} accounts={accounts} />
 
