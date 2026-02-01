@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -20,7 +22,7 @@ body {
   background-size: 400% 400%;
   animation: nebula-shift 15s ease infinite;
   color: #00ffc8;
-  font-family: 'Courier New', monospace;
+  font-family: 'Space Mono', monospace;
   position: relative;
   overflow-x: hidden;
 }
@@ -202,11 +204,11 @@ h3 {
 
 /* ============ BUTTONS ============ */
 button {
-  @apply transition-all duration-300 ease-out;
+  transition: all 0.3s ease-out;
 }
 
 button:hover {
-  @apply transform -translate-y-1;
+  transform: translateY(-0.25rem);
 }
 
 .btn-primary {
@@ -236,7 +238,7 @@ input, textarea, select {
   border-radius: 4px !important;
   color: #00ffc8 !important;
   padding: 10px 12px !important;
-  font-family: 'Courier New', monospace !important;
+  font-family: 'Space Mono', monospace !important;
   transition: all 0.3s ease !important;
 }
 
