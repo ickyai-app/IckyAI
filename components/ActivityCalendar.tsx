@@ -35,6 +35,7 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState('14:00');
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
   const [formData, setFormData] = useState({
     account_id: '',
     type: 'call',
@@ -104,6 +105,7 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
   };
 
   const handleQuickAdd = (date: Date, time?: string) => {
+    setEditingActivity(null);
     setSelectedDate(date);
     const timeToUse = time || '14:00';
     const [hour, min] = timeToUse.split(':');
@@ -123,6 +125,45 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
     setMessage('');
   };
 
+  const handleEditActivity = (activity: Activity) => {
+    setEditingActivity(activity);
+    setSelectedDate(new Date(activity.date));
+    setFormData({
+      account_id: activity.account_id.toString(),
+      type: activity.type,
+      contact: activity.contact,
+      notes: activity.notes,
+      duration: '60',
+      outcome: activity.outcome,
+      start_time: activity.start_time || '14:00',
+      end_time: activity.end_time || '15:00',
+    });
+    setShowForm(true);
+    setMessage('');
+  };
+
+  const handleDeleteActivity = async (activityId: number) => {
+    if (!user) return;
+    if (!confirm('Are you sure you want to delete this activity?')) return;
+
+    try {
+      const response = await fetch(`/api/activities?id=${activityId}`, {
+        method: 'DELETE',
+        headers: {
+          'x-user-id': user.id.toString()
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to delete');
+
+      onActivityAdded?.();
+      setMessage('✅ Activity deleted!');
+      setTimeout(() => setMessage(''), 2000);
+    } catch (error) {
+      setMessage('❌ Error deleting activity');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !formData.account_id || !selectedDate) return;
@@ -131,30 +172,40 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
     setMessage('');
 
     try {
-      const response = await fetch('/api/activities', {
-        method: 'POST',
+      const method = editingActivity ? 'PUT' : 'POST';
+      const endpoint = editingActivity ? '/api/activities' : '/api/activities';
+      
+      const body = {
+        ...formData,
+        account_id: parseInt(formData.account_id),
+        duration: formData.duration ? parseInt(formData.duration) : 0,
+        date: selectedDate.toISOString(),
+        start_time: formData.start_time,
+        end_time: formData.end_time,
+      };
+
+      if (editingActivity) {
+        body.id = editingActivity.id;
+      }
+
+      const response = await fetch(endpoint, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
           'x-user-id': user.id.toString()
         },
-        body: JSON.stringify({
-          ...formData,
-          account_id: parseInt(formData.account_id),
-          duration: formData.duration ? parseInt(formData.duration) : 0,
-          date: selectedDate.toISOString(),
-          start_time: formData.start_time,
-          end_time: formData.end_time,
-        })
+        body: JSON.stringify(body)
       });
 
       if (!response.ok) {
-        throw new Error('Failed to add activity');
+        throw new Error(`Failed to ${editingActivity ? 'update' : 'add'} activity`);
       }
 
-      setMessage('✅ Activity added successfully!');
+      setMessage(`✅ Activity ${editingActivity ? 'updated' : 'added'} successfully!`);
       setTimeout(() => {
         setShowForm(false);
-        onActivityAdded?.(); // Refresh data in all views
+        setEditingActivity(null);
+        onActivityAdded?.();
       }, 1000);
       
       setFormData({
@@ -168,7 +219,7 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
         end_time: '15:00',
       });
     } catch (error) {
-      setMessage(`❌ Error adding activity`);
+      setMessage(`❌ Error ${editingActivity ? 'updating' : 'adding'} activity`);
     } finally {
       setIsLoading(false);
     }
@@ -239,9 +290,20 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
 
       {showForm && (
         <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6 mb-6 sticky top-20 z-50">
-          <h3 className="text-xl font-bold text-white mb-4">
-            ➕ Add Activity for {selectedDate?.toLocaleDateString()} at {formData.start_time}
-          </h3>
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-xl font-bold text-white">
+              {editingActivity ? '✏️ Edit Activity' : '➕ Add Activity'} for {selectedDate?.toLocaleDateString()} at {formData.start_time}
+            </h3>
+            {editingActivity && (
+              <button
+                type="button"
+                onClick={() => handleDeleteActivity(editingActivity.id)}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold"
+              >
+                🗑️ Delete
+              </button>
+            )}
+          </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -363,11 +425,14 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                 disabled={isLoading}
                 className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-2 px-4 rounded-lg transition"
               >
-                {isLoading ? '⏳ Adding...' : '✅ Add Activity'}
+                {isLoading ? '⏳ Saving...' : editingActivity ? '✅ Update Activity' : '✅ Add Activity'}
               </button>
               <button
                 type="button"
-                onClick={() => setShowForm(false)}
+                onClick={() => {
+                  setShowForm(false);
+                  setEditingActivity(null);
+                }}
                 className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-lg transition"
               >
                 Cancel
@@ -417,7 +482,15 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                       </p>
                       <div className="space-y-1 mb-2 text-xs">
                         {dateActivities.map(activity => (
-                          <div key={activity.id} className="bg-blue-600 text-white px-1.5 py-0.5 rounded truncate hover:bg-blue-500">
+                          <div
+                            key={activity.id}
+                            className="bg-blue-600 text-white px-1.5 py-0.5 rounded truncate hover:bg-blue-500 cursor-pointer transition"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditActivity(activity);
+                            }}
+                            title="Click to edit"
+                          >
                             {typeIcons[activity.type] || '📝'} {activity.start_time || ''}
                           </div>
                         ))}
@@ -496,10 +569,12 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                             {dayActivities.map(activity => (
                               <div
                                 key={activity.id}
-                                className="bg-gradient-to-r from-blue-600 to-blue-500 border border-blue-400 p-1 rounded text-xs text-white font-semibold truncate hover:shadow-lg transition"
+                                className="bg-gradient-to-r from-blue-600 to-blue-500 border border-blue-400 p-1 rounded text-xs text-white font-semibold truncate hover:shadow-lg transition cursor-pointer"
                                 onClick={(e) => {
                                   e.stopPropagation();
+                                  handleEditActivity(activity);
                                 }}
+                                title="Click to edit"
                               >
                                 {activity.start_time} {activity.account_name}
                               </div>
@@ -551,8 +626,12 @@ export default function ActivityCalendar({ activities, accounts, onActivityAdded
                       .map(activity => (
                         <div
                           key={activity.id}
-                          className="bg-gradient-to-r from-blue-600 to-blue-500 border-2 border-blue-400 p-3 rounded-lg shadow-lg hover:shadow-xl transition"
-                          onClick={(e) => e.stopPropagation()}
+                          className="bg-gradient-to-r from-blue-600 to-blue-500 border-2 border-blue-400 p-3 rounded-lg shadow-lg hover:shadow-xl transition cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditActivity(activity);
+                          }}
+                          title="Click to edit"
                         >
                           <div className="text-xs text-white font-bold">{activity.start_time} - {activity.end_time}</div>
                           <div className="text-xs text-blue-100 font-semibold">{activity.account_name}</div>
