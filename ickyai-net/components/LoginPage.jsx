@@ -18,8 +18,8 @@ export default function LoginPage({ onLogin }) {
     try {
       const supabase = getSupabaseClient();
       if (!supabase) {
-        setError('Supabase not configured. Use Demo Login instead.');
-        setLoading(false);
+        // Auto-fallback to demo login if Supabase not configured
+        handleDemoLogin();
         return;
       }
 

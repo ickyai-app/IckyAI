@@ -16,7 +16,7 @@ export default function FollowUpReminders({ accounts, activities }) {
     dateOption: 'tomorrow',
   });
 
-  const getDateFromOption = (option) => {
+  const getDateFromOption = (option, customDate = null) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -33,6 +33,8 @@ export default function FollowUpReminders({ accounts, activities }) {
         const nextMonth = new Date(today);
         nextMonth.setMonth(nextMonth.getMonth() + 1);
         return nextMonth;
+      case 'custom':
+        return customDate ? new Date(customDate) : today;
       default:
         return today;
     }
