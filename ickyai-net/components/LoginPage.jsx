@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 
 export default function LoginPage({ onLogin }) {
-  const [email, setEmail] = useState('Klemen.witwicky@gmail.com');
-  const [password, setPassword] = useState('Icky44ewa');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSignup, setIsSignup] = useState(false);
@@ -155,9 +155,8 @@ export default function LoginPage({ onLogin }) {
 
         {/* Demo Info */}
         <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg text-blue-200 text-sm">
-          <p className="font-semibold mb-2">Demo Credentials:</p>
-          <p>Email: Klemen.witwicky@gmail.com</p>
-          <p>Password: Icky44ewa</p>
+          <p className="font-semibold mb-2">💡 Tip:</p>
+          <p>Click "Use Demo Login" to try the app instantly with sample data.</p>
         </div>
       </div>
     </div>
