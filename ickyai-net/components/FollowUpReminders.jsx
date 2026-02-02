@@ -1,175 +1,330 @@
 'use client';
 
-import { useMemo } from 'react';
-
-const FOLLOW_UP_RULES = [
-  {
-    id: 'rule-1',
-    name: 'Quote Follow-up',
-    trigger: 'Quote sent 3 days ago',
-    action: 'Call',
-    priority: 'HIGH',
-  },
-  {
-    id: 'rule-2',
-    name: 'Site Visit Summary',
-    trigger: 'Site Visit 1 day ago',
-    action: 'Email',
-    priority: 'HIGH',
-  },
-  {
-    id: 'rule-3',
-    name: 'Initial Response Check',
-    trigger: '7 days no response',
-    action: 'Call or Email',
-    priority: 'MEDIUM',
-  },
-  {
-    id: 'rule-4',
-    name: 'Second Reminder',
-    trigger: '14 days no response',
-    action: 'Email',
-    priority: 'MEDIUM',
-  },
-  {
-    id: 'rule-5',
-    name: 'Deal at Risk',
-    trigger: '21 days no response',
-    action: 'Call',
-    priority: 'URGENT',
-  },
-];
+import { useState, useMemo } from 'react';
 
 export default function FollowUpReminders({ accounts, activities }) {
-  const followUps = useMemo(() => {
-    // Calculate overdue follow-ups based on rules
-    const result = [];
+  const [followUps, setFollowUps] = useState([
+    { id: '1', accountName: 'Kranjska Gora Facility', type: 'CALL', dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), notes: 'Follow up on demo', completed: false },
+    { id: '2', accountName: 'Ljubljana Business Center', type: 'EMAIL', dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), notes: 'Send proposal', completed: false },
+  ]);
 
-    // Simulate follow-ups (in production, this would be calculated from actual data)
-    FOLLOW_UP_RULES.forEach((rule) => {
-      const count = Math.floor(Math.random() * 3);
-      if (count > 0) {
-        result.push({
-          ...rule,
-          dueAccounts: count,
-        });
-      }
-    });
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    accountName: '',
+    type: 'CALL',
+    notes: '',
+    dateOption: 'tomorrow',
+  });
 
-    return result.sort((a, b) => {
-      const priorityMap = { URGENT: 0, HIGH: 1, MEDIUM: 2 };
-      return priorityMap[a.priority] - priorityMap[b.priority];
-    });
-  }, [accounts, activities]);
+  const getDateFromOption = (option) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 'URGENT':
-        return 'bg-red-600';
-      case 'HIGH':
-        return 'bg-orange-600';
-      case 'MEDIUM':
-        return 'bg-yellow-600';
+    switch (option) {
+      case 'tomorrow':
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return tomorrow;
+      case 'nextweek':
+        const nextWeek = new Date(today);
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        return nextWeek;
+      case 'nextmonth':
+        const nextMonth = new Date(today);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        return nextMonth;
       default:
-        return 'bg-gray-600';
+        return today;
     }
+  };
+
+  const handleAddFollowUp = (e) => {
+    e.preventDefault();
+    if (!formData.accountName.trim()) return;
+
+    const newFollowUp = {
+      id: Date.now().toString(),
+      accountName: formData.accountName,
+      type: formData.type,
+      notes: formData.notes,
+      dueDate: getDateFromOption(formData.dateOption),
+      completed: false,
+    };
+
+    setFollowUps([...followUps, newFollowUp]);
+    setFormData({ accountName: '', type: 'CALL', notes: '', dateOption: 'tomorrow' });
+    setShowForm(false);
+  };
+
+  const toggleComplete = (id) => {
+    setFollowUps(followUps.map(fu => fu.id === id ? { ...fu, completed: !fu.completed } : fu));
+  };
+
+  const deleteFollowUp = (id) => {
+    setFollowUps(followUps.filter(fu => fu.id !== id));
+  };
+
+  const sortedFollowUps = useMemo(() => {
+    return [...followUps].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+  }, [followUps]);
+
+  const overdue = sortedFollowUps.filter(fu => !fu.completed && new Date(fu.dueDate) < new Date());
+  const today = sortedFollowUps.filter(fu => !fu.completed && new Date(fu.dueDate).toDateString() === new Date().toDateString());
+  const upcoming = sortedFollowUps.filter(fu => !fu.completed && new Date(fu.dueDate) > new Date());
+  const completed = sortedFollowUps.filter(fu => fu.completed);
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-3xl font-bold mb-2">⏰ Smart Follow-Up Reminders</h2>
-        <p className="text-cyan-300">Automated follow-up intelligence based on sales rules</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold mb-2">⏰ Follow-Up Reminders</h2>
+          <p className="text-cyan-300">Manage and schedule your follow-ups</p>
+        </div>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-lg transition-all"
+        >
+          {showForm ? '✕ Cancel' : '+ Add Follow-Up'}
+        </button>
       </div>
 
-      {/* Follow-up Rules */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {followUps.map((followUp) => (
-          <div key={followUp.id} className="neon-card">
-            <div className="flex items-start justify-between mb-3">
+      {/* Add Follow-Up Form */}
+      {showForm && (
+        <div className="neon-card">
+          <h3 className="text-xl font-bold mb-4">New Follow-Up</h3>
+          <form onSubmit={handleAddFollowUp} className="space-y-4">
+            <div>
+              <label className="block text-cyan-300 text-sm font-semibold mb-2">Account</label>
+              <select
+                value={formData.accountName}
+                onChange={(e) => setFormData({ ...formData, accountName: e.target.value })}
+                className="w-full px-4 py-2 bg-gray-700 border border-cyan-500/30 rounded-lg text-cyan-100 focus:outline-none focus:border-cyan-400"
+              >
+                <option value="">Select an account...</option>
+                {accounts.map(acc => (
+                  <option key={acc.id} value={acc.account_name}>{acc.account_name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <h3 className="font-bold text-cyan-100">{followUp.name}</h3>
-                <p className="text-sm text-cyan-300 mt-1">{followUp.trigger}</p>
+                <label className="block text-cyan-300 text-sm font-semibold mb-2">Type</label>
+                <select
+                  value={formData.type}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  className="w-full px-4 py-2 bg-gray-700 border border-cyan-500/30 rounded-lg text-cyan-100 focus:outline-none focus:border-cyan-400"
+                >
+                  <option value="CALL">📞 Call</option>
+                  <option value="EMAIL">📧 Email</option>
+                  <option value="VISIT">🏢 Visit</option>
+                  <option value="DEMO">🎥 Demo</option>
+                </select>
               </div>
-              <span className={`${getPriorityColor(followUp.priority)} px-3 py-1 rounded text-xs font-bold text-cyan-100`}>
-                {followUp.priority}
-              </span>
+
+              <div>
+                <label className="block text-cyan-300 text-sm font-semibold mb-2">When?</label>
+                <select
+                  value={formData.dateOption}
+                  onChange={(e) => setFormData({ ...formData, dateOption: e.target.value })}
+                  className="w-full px-4 py-2 bg-gray-700 border border-cyan-500/30 rounded-lg text-cyan-100 focus:outline-none focus:border-cyan-400"
+                >
+                  <option value="tomorrow">Tomorrow</option>
+                  <option value="nextweek">Next Week</option>
+                  <option value="nextmonth">Next Month</option>
+                </select>
+              </div>
             </div>
-            <div className="bg-gray-700 p-3 rounded mt-3 mb-3">
-              <div className="text-xs text-cyan-300 mb-1">Recommended Action</div>
-              <div className="font-semibold text-cyan-100">{followUp.action}</div>
+
+            <div>
+              <label className="block text-cyan-300 text-sm font-semibold mb-2">Notes</label>
+              <textarea
+                value={formData.notes}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                placeholder="What's this follow-up about?"
+                className="w-full px-4 py-2 bg-gray-700 border border-cyan-500/30 rounded-lg text-cyan-100 focus:outline-none focus:border-cyan-400 resize-none h-24"
+              />
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-cyan-300">Accounts due: {followUp.dueAccounts}</span>
-              <button className="px-3 py-1 bg-red-500 hover:bg-red-600 rounded text-cyan-100 text-xs font-semibold transition-colors">
-                View All
-              </button>
-            </div>
+
+            <button
+              type="submit"
+              className="w-full px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition-colors"
+            >
+              ✓ Add Follow-Up
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* Overdue Follow-ups */}
+      {overdue.length > 0 && (
+        <div className="neon-card border-red-500/50">
+          <h3 className="text-xl font-bold mb-4 text-red-400">🔴 Overdue ({overdue.length})</h3>
+          <div className="space-y-3">
+            {overdue.map(fu => (
+              <div key={fu.id} className="bg-red-900/20 border border-red-500/30 p-4 rounded-lg">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={fu.completed}
+                        onChange={() => toggleComplete(fu.id)}
+                        className="w-5 h-5 cursor-pointer"
+                      />
+                      <div>
+                        <div className="font-semibold text-cyan-100">{fu.accountName}</div>
+                        <div className="text-sm text-cyan-300">{fu.type === 'CALL' ? '📞' : fu.type === 'EMAIL' ? '📧' : fu.type === 'VISIT' ? '🏢' : '🎥'} {fu.type} • Due: {formatDate(fu.dueDate)}</div>
+                        {fu.notes && <div className="text-xs text-gray-300 mt-1">{fu.notes}</div>}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => deleteFollowUp(fu.id)}
+                    className="text-red-400 hover:text-red-300 text-sm font-semibold"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
       {/* Today's Follow-ups */}
-      <div className="neon-card">
-        <h3 className="text-xl font-bold mb-4">📅 Today's Follow-ups</h3>
-        <div className="space-y-2 max-h-96 overflow-y-auto">
-          <div className="bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-semibold text-cyan-100">ACME Corp</div>
-                <div className="text-sm text-cyan-300">Quote sent 3 days ago → Follow up call</div>
+      {today.length > 0 && (
+        <div className="neon-card border-orange-500/50">
+          <h3 className="text-xl font-bold mb-4 text-orange-400">📅 Today ({today.length})</h3>
+          <div className="space-y-3">
+            {today.map(fu => (
+              <div key={fu.id} className="bg-orange-900/20 border border-orange-500/30 p-4 rounded-lg">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={fu.completed}
+                        onChange={() => toggleComplete(fu.id)}
+                        className="w-5 h-5 cursor-pointer"
+                      />
+                      <div>
+                        <div className="font-semibold text-cyan-100">{fu.accountName}</div>
+                        <div className="text-sm text-cyan-300">{fu.type === 'CALL' ? '📞' : fu.type === 'EMAIL' ? '📧' : fu.type === 'VISIT' ? '🏢' : '🎥'} {fu.type}</div>
+                        {fu.notes && <div className="text-xs text-gray-300 mt-1">{fu.notes}</div>}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => deleteFollowUp(fu.id)}
+                    className="text-red-400 hover:text-red-300 text-sm font-semibold"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-              <div className="text-right">
-                <span className="text-xs bg-red-500 text-cyan-100 px-2 py-1 rounded font-semibold">HIGH</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-semibold text-cyan-100">TechStart Ltd</div>
-                <div className="text-sm text-cyan-300">Site visit yesterday → Send summary email</div>
-              </div>
-              <div className="text-right">
-                <span className="text-xs bg-orange-500 text-cyan-100 px-2 py-1 rounded font-semibold">HIGH</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center py-8 text-cyan-300 text-sm">
-            <p>No additional follow-ups scheduled for today</p>
+            ))}
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Weekly Follow-up Schedule */}
-      <div className="neon-card">
-        <h3 className="text-xl font-bold mb-4">📋 This Week's Follow-ups</h3>
-        <div className="grid grid-cols-7 gap-2">
-          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, idx) => (
-            <div key={day} className="bg-gray-700 p-3 rounded-lg text-center">
-              <div className="text-sm font-semibold text-cyan-100">{day}</div>
-              <div className="text-2xl font-bold text-red-500 mt-2">{Math.floor(Math.random() * 5)}</div>
-              <div className="text-xs text-cyan-300 mt-1">due</div>
-            </div>
-          ))}
+      {/* Upcoming Follow-ups */}
+      {upcoming.length > 0 && (
+        <div className="neon-card">
+          <h3 className="text-xl font-bold mb-4">📋 Upcoming ({upcoming.length})</h3>
+          <div className="space-y-3">
+            {upcoming.map(fu => (
+              <div key={fu.id} className="bg-gray-700/50 border border-cyan-500/30 p-4 rounded-lg hover:border-cyan-400/50 transition-colors">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={fu.completed}
+                        onChange={() => toggleComplete(fu.id)}
+                        className="w-5 h-5 cursor-pointer"
+                      />
+                      <div>
+                        <div className="font-semibold text-cyan-100">{fu.accountName}</div>
+                        <div className="text-sm text-cyan-300">{fu.type === 'CALL' ? '📞' : fu.type === 'EMAIL' ? '📧' : fu.type === 'VISIT' ? '🏢' : '🎥'} {fu.type} • Due: {formatDate(fu.dueDate)}</div>
+                        {fu.notes && <div className="text-xs text-gray-300 mt-1">{fu.notes}</div>}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => deleteFollowUp(fu.id)}
+                    className="text-red-400 hover:text-red-300 text-sm font-semibold"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Best Practices */}
-      <div className="card bg-blue-500/10 border-blue-500/30">
-        <h3 className="text-xl font-bold mb-3">💡 Follow-up Best Practices</h3>
-        <ul className="space-y-2 text-sm text-blue-200">
-          <li>✓ Call within 24 hours of a site visit or demo</li>
-          <li>✓ Email follow-up 3 days after sending a quote</li>
-          <li>✓ After 7 days of no response, make another attempt (call or email)</li>
-          <li>✓ After 21 days, either close the deal or archive the lead</li>
-          <li>✓ Keep notes detailed so teammates can follow up if needed</li>
-        </ul>
+      {/* Completed Follow-ups */}
+      {completed.length > 0 && (
+        <div className="neon-card border-green-500/30">
+          <h3 className="text-xl font-bold mb-4 text-green-400">✓ Completed ({completed.length})</h3>
+          <div className="space-y-2">
+            {completed.map(fu => (
+              <div key={fu.id} className="bg-green-900/10 border border-green-500/20 p-3 rounded-lg line-through text-gray-400 text-sm">
+                <div className="flex items-center justify-between">
+                  <span>{fu.accountName} • {fu.type}</span>
+                  <button
+                    onClick={() => deleteFollowUp(fu.id)}
+                    className="text-gray-400 hover:text-red-300 text-xs"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {followUps.length === 0 && (
+        <div className="neon-card text-center py-12">
+          <div className="text-4xl mb-3">✨</div>
+          <h3 className="text-xl font-bold text-cyan-100 mb-2">No Follow-ups Yet</h3>
+          <p className="text-cyan-300 mb-4">Create your first follow-up to get started</p>
+          <button
+            onClick={() => setShowForm(true)}
+            className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition-colors"
+          >
+            + Add Follow-Up
+          </button>
+        </div>
+      )}
+
+      {/* Stats */}
+      <div className="grid grid-cols-4 gap-4">
+        <div className="neon-card text-center">
+          <div className="text-3xl font-bold text-red-500">{overdue.length}</div>
+          <div className="text-sm text-cyan-300 mt-2">Overdue</div>
+        </div>
+        <div className="neon-card text-center">
+          <div className="text-3xl font-bold text-orange-500">{today.length}</div>
+          <div className="text-sm text-cyan-300 mt-2">Today</div>
+        </div>
+        <div className="neon-card text-center">
+          <div className="text-3xl font-bold text-cyan-400">{upcoming.length}</div>
+          <div className="text-sm text-cyan-300 mt-2">Upcoming</div>
+        </div>
+        <div className="neon-card text-center">
+          <div className="text-3xl font-bold text-green-500">{completed.length}</div>
+          <div className="text-sm text-cyan-300 mt-2">Completed</div>
+        </div>
       </div>
     </div>
   );
 }
-
