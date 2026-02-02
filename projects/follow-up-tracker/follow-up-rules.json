@@ -1,0 +1,110 @@
+{
+  "followUpRules": [
+    {
+      "id": "rule-1",
+      "name": "Quote Follow-up",
+      "trigger": {
+        "activityType": "Quote sent",
+        "daysSince": 3
+      },
+      "action": "Call",
+      "message": "Follow up on quote - they've had 3 days to review",
+      "priority": "HIGH"
+    },
+    {
+      "id": "rule-2",
+      "name": "Site Visit Summary",
+      "trigger": {
+        "activityType": "Site Visit",
+        "daysSince": 1
+      },
+      "action": "Email",
+      "message": "Send follow-up summary with proposal next steps",
+      "priority": "HIGH"
+    },
+    {
+      "id": "rule-3",
+      "name": "Initial Response Check",
+      "trigger": {
+        "activityType": ["Quote sent", "Email"],
+        "daysSince": 7
+      },
+      "action": "Call or Email",
+      "message": "Gentle reminder - check if they're still interested",
+      "priority": "MEDIUM"
+    },
+    {
+      "id": "rule-4",
+      "name": "Second Reminder",
+      "trigger": {
+        "daysSince": 14,
+        "status": ["AWAITING RESPONSE", "NO RESPONSE"]
+      },
+      "action": "Email",
+      "message": "Still interested? Gentle check-in",
+      "priority": "MEDIUM"
+    },
+    {
+      "id": "rule-5",
+      "name": "Deal at Risk",
+      "trigger": {
+        "daysSince": 21,
+        "status": ["AWAITING RESPONSE", "STALLED"]
+      },
+      "action": "Call",
+      "message": "Proactive strategy call - determine next steps or archive",
+      "priority": "URGENT"
+    },
+    {
+      "id": "rule-6",
+      "name": "Cold Lead Nurture",
+      "trigger": {
+        "status": "NEW",
+        "daysSince": 3
+      },
+      "action": "Call or Email",
+      "message": "Follow up on initial contact",
+      "priority": "MEDIUM"
+    },
+    {
+      "id": "rule-7",
+      "name": "Stalled Deal Recovery",
+      "trigger": {
+        "status": "STALLED",
+        "daysSince": 30
+      },
+      "action": "Call",
+      "message": "Long time no contact - worth a check-in call",
+      "priority": "URGENT"
+    }
+  ],
+  "accountStatuses": [
+    "NEW",
+    "QUALIFIED",
+    "DEMO",
+    "QUOTE SENT",
+    "AWAITING RESPONSE",
+    "NEGOTIATING",
+    "READY TO CLOSE",
+    "CLOSED",
+    "LOST",
+    "STALLED",
+    "ON HOLD",
+    "NO RESPONSE"
+  ],
+  "activityTypes": [
+    "Call",
+    "Email",
+    "Site Visit",
+    "Quote sent",
+    "Demo",
+    "Meeting",
+    "Initial contact"
+  ],
+  "successMetrics": {
+    "targetActivitiesPerWeek": 15,
+    "targetQuoteConversion": 0.3,
+    "targetFollowUpAdherence": 0.95,
+    "targetAverageSaleCycleDays": 45
+  }
+}

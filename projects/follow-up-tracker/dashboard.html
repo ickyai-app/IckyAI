@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kärcher Sales Dashboard 2050</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        @keyframes float-pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes glow-pulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(0, 255, 200, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(0, 255, 200, 0.8), 0 0 30px rgba(100, 0, 255, 0.6); }
+        }
+        
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes nebula-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes neon-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 10px rgba(0, 255, 200, 0.8), 0 0 20px rgba(100, 0, 255, 0.6); }
+            20%, 24%, 55% { text-shadow: 0 0 5px rgba(0, 255, 200, 0.3); }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(-45deg, #0a0e27, #1a1535, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: nebula-shift 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            color: #00ffc8;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(100, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 200, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            background: linear-gradient(135deg, rgba(10, 14, 39, 0.8), rgba(26, 21, 53, 0.8));
+            padding: 40px 30px;
+            border-radius: 0;
+            border: 2px solid rgba(0, 255, 200, 0.3);
+            border-top: 3px solid #00ffc8;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.2), inset 0 0 20px rgba(100, 0, 255, 0.1);
+            animation: slide-in 0.8s ease-out;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            color: #00ffc8;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            animation: glow-pulse 3s ease-in-out infinite;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            color: #00d9ff;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            animation: slide-in 0.8s ease-out 0.1s both;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, rgba(26, 21, 53, 0.6), rgba(15, 52, 96, 0.6));
+            border-radius: 0;
+            padding: 24px;
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 200, 0.1), inset 0 0 10px rgba(100, 0, 255, 0.05);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffc8, transparent);
+            animation: float-pulse 3s ease-in-out infinite;
+        }
+        
+        .card:hover {
+            border-color: rgba(0, 255, 200, 0.5);
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.2), inset 0 0 15px rgba(100, 0, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #00d9ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .card.highlight {
+            border-top: 2px solid #ff006e;
+            border-left: 2px solid #ff006e;
+        }
+        
+        .card.success {
+            border-top: 2px solid #00ffc8;
+            border-left: 2px solid #00ffc8;
+        }
+        
+        .card.info {
+            border-top: 2px solid #00d9ff;
+            border-left: 2px solid #00d9ff;
+        }
+        
+        .big-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: #00ffc8;
+            margin: 15px 0;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 20px rgba(0, 255, 200, 0.5);
+            letter-spacing: 1px;
+        }
+        
+        .small-text {
+            font-size: 12px;
+            color: #00d9ff;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .status-item {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.05), rgba(100, 0, 255, 0.05));
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .status-item:hover {
+            border-color: rgba(0, 255, 200, 0.5);
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.1), rgba(100, 0, 255, 0.1));
+        }
+        
+        .status-item strong {
+            display: block;
+            font-size: 20px;
+            color: #00ffc8;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 255, 200, 0.5);
+        }
+        
+        .status-item small {
+            display: block;
+            font-size: 10px;
+            color: #00d9ff;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .account-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .account-item {
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(15, 52, 96, 0.4), rgba(26, 21, 53, 0.4));
+            border-radius: 0;
+            border-left: 3px solid #00d9ff;
+            font-size: 13px;
+            color: #00ffc8;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 200, 0.15);
+            border-left: 3px solid #00d9ff;
+        }
+        
+        .account-item.urgent {
+            border-left-color: #ff006e;
+            border-top: 1px solid rgba(255, 0, 110, 0.3);
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.05), rgba(26, 21, 53, 0.4));
+        }
+        
+        .account-item.high {
+            border-left-color: #ffbe0b;
+            border-top: 1px solid rgba(255, 190, 11, 0.3);
+            background: linear-gradient(135deg, rgba(255, 190, 11, 0.05), rgba(26, 21, 53, 0.4));
+        }
+        
+        .account-item:hover {
+            transform: translateX(5px);
+            border-color: rgba(0, 255, 200, 0.4);
+            box-shadow: 0 0 15px rgba(0, 255, 200, 0.1);
+        }
+        
+        .account-item strong {
+            display: block;
+            color: #00ffc8;
+            margin-bottom: 6px;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 255, 200, 0.3);
+        }
+        
+        .account-item .meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            color: #00d9ff;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .progress {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 255, 200, 0.1);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 0;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00d9ff, #00ffc8);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 200, 0.5);
+        }
+        
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .metric {
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.05), rgba(100, 0, 255, 0.05));
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .metric:hover {
+            border-color: rgba(0, 255, 200, 0.5);
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.1), rgba(100, 0, 255, 0.1));
+        }
+        
+        .metric label {
+            display: block;
+            font-size: 10px;
+            color: #00d9ff;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        
+        .metric value {
+            display: block;
+            font-size: 24px;
+            font-weight: 900;
+            color: #00ffc8;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 255, 200, 0.5);
+        }
+        
+        .chart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .chart-item {
+            text-align: center;
+        }
+        
+        .chart-bar {
+            width: 100%;
+            height: 80px;
+            background: rgba(0, 255, 200, 0.1);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .chart-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #00d9ff, #00ffc8);
+            position: absolute;
+            bottom: 0;
+            box-shadow: 0 0 15px rgba(0, 255, 200, 0.4);
+        }
+        
+        .chart-label {
+            font-size: 11px;
+            color: #00d9ff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        footer {
+            text-align: center;
+            color: #00d9ff;
+            font-size: 11px;
+            margin-top: 40px;
+            padding: 20px;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(0, 255, 200, 0.2);
+        }
+        
+        footer code {
+            background: rgba(0, 255, 200, 0.1);
+            padding: 2px 6px;
+            border: 1px solid rgba(0, 255, 200, 0.3);
+            color: #00ffc8;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 28px;
+                letter-spacing: 2px;
+            }
+            
+            .big-number {
+                font-size: 36px;
+            }
+            
+            .metrics-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 255, 200, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 200, 0.3);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 200, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ KÄRCHER NEXUS 2050</h1>
+            <p class="subtitle">▸ Advanced Sales Intelligence System ◂</p>
+        </header>
+        
+        <div class="dashboard-grid">
+            <!-- Pipeline Value -->
+            <div class="card highlight">
+                <h2>💰 Pipeline Value</h2>
+                <div class="big-number">€119,000</div>
+                <p class="small-text">Total opportunity value in negotiation + demo</p>
+                <div class="status-bar">
+                    <div class="status-item">
+                        <strong>€25K</strong>
+                        <small>Hospital</small>
+                    </div>
+                    <div class="status-item">
+                        <strong>€20K</strong>
+                        <small>Shopping Mall</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Accounts Tracked -->
+            <div class="card success">
+                <h2>📊 Accounts Tracked</h2>
+                <div class="big-number">10</div>
+                <p class="small-text">Active prospects in your pipeline</p>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 100%;"></div>
+                </div>
+                <div class="metrics-row">
+                    <div class="metric">
+                        <label>Hot Leads</label>
+                        <value>3</value>
+                    </div>
+                    <div class="metric">
+                        <label>Warm Leads</label>
+                        <value>4</value>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Activities This Week -->
+            <div class="card info">
+                <h2>📞 Activities This Week</h2>
+                <div class="big-number">5</div>
+                <p class="small-text">Calls, emails, visits logged</p>
+                <div class="status-bar">
+                    <div class="status-item">
+                        <strong>3</strong>
+                        <small>Calls</small>
+                    </div>
+                    <div class="status-item">
+                        <strong>2</strong>
+                        <small>Emails</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pipeline Status -->
+        <div class="card">
+            <h2>📈 Pipeline by Status</h2>
+            <div class="status-bar" style="gap: 8px; margin: 15px 0;">
+                <div class="status-item">
+                    <strong>2</strong>
+                    <small>Quote Sent</small>
+                </div>
+                <div class="status-item">
+                    <strong>2</strong>
+                    <small>Negotiating</small>
+                </div>
+                <div class="status-item">
+                    <strong>2</strong>
+                    <small>Demo</small>
+                </div>
+                <div class="status-item">
+                    <strong>2</strong>
+                    <small>Qualified</small>
+                </div>
+                <div class="status-item">
+                    <strong>2</strong>
+                    <small>New</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hot Items -->
+        <div class="card highlight" style="margin-top: 20px;">
+            <h2>🔥 Action Items - Do Today!</h2>
+            <div class="account-list">
+                <div class="account-item urgent">
+                    <strong>Building XYZ - Sarah</strong>
+                    📞 CALL: Follow up on quote sent 3 days ago
+                    <div class="meta">
+                        <span>€12,000 deal</span>
+                        <span>HIGH PRIORITY</span>
+                    </div>
+                </div>
+                <div class="account-item high">
+                    <strong>Business Park GHI - Robert</strong>
+                    📧 EMAIL: Gentle reminder - no response for 5 days
+                    <div class="meta">
+                        <span>€15,000 deal</span>
+                        <span>MEDIUM PRIORITY</span>
+                    </div>
+                </div>
+                <div class="account-item high">
+                    <strong>Shopping Mall MNO - Vesna</strong>
+                    📞 CALL: Follow up - 6 days since quote
+                    <div class="meta">
+                        <span>€20,000 deal</span>
+                        <span>MEDIUM PRIORITY</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Best Opportunities -->
+        <div class="card success" style="margin-top: 20px;">
+            <h2>⭐ Your Best Opportunities</h2>
+            <div class="account-list">
+                <div class="account-item">
+                    <strong>Hospital PQR - Dr. Anja</strong>
+                    ✅ Very interested | 💬 Negotiating on price
+                    <div class="meta">
+                        <span>€25,000 - BIGGEST DEAL</span>
+                        <span>Ready to close soon</span>
+                    </div>
+                </div>
+                <div class="account-item">
+                    <strong>Airport STU - Facilities</strong>
+                    ⏱️ Stalled | 📍 Check status - 11 days since contact
+                    <div class="meta">
+                        <span>€18,000 - REACTIVATE</span>
+                        <span>Need outreach</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Weekly Stats -->
+        <div class="card info" style="margin-top: 20px;">
+            <h2>📊 This Week's Performance</h2>
+            <div class="metrics-row">
+                <div class="metric">
+                    <label>Calls Made</label>
+                    <value>3</value>
+                </div>
+                <div class="metric">
+                    <label>Quotes Sent</label>
+                    <value>2</value>
+                </div>
+                <div class="metric">
+                    <label>Site Visits</label>
+                    <value>2</value>
+                </div>
+                <div class="metric">
+                    <label>Emails</label>
+                    <value>2</value>
+                </div>
+            </div>
+            <p class="small-text" style="margin-top: 15px;">
+                Target: 15+ activities per week | Current: 9 | Need: 6 more activities
+            </p>
+        </div>
+        
+        <footer>
+            <p>⚡ NEURAL SYNC: Execute <code>node follow-up-tracker.js</code> for real-time priority matrix</p>
+            <p style="margin-top: 10px; opacity: 0.8;">◆ Last sync: {{DATE}} | Next cycle: {{NEXT}} ◆</p>
+        </footer>
+    </div>
+</body>
+</html>

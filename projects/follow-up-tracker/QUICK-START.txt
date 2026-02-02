@@ -1,0 +1,244 @@
+═══════════════════════════════════════════════════════════════════
+  KÄRCHER FOLLOW-UP TRACKER - QUICK START (5 MINUTES)
+═══════════════════════════════════════════════════════════════════
+
+This folder contains everything you need to track sales activities,
+manage follow-ups, and grow your pipeline.
+
+═══════════════════════════════════════════════════════════════════
+STEP 1: View Your Dashboard (30 seconds)
+═══════════════════════════════════════════════════════════════════
+
+Double-click: dashboard.html
+
+This opens in your web browser and shows:
+- 💰 Total pipeline value
+- 📊 Accounts by status
+- 🔥 Hot items needing action
+- 📈 This week's activity
+
+No setup needed. Just open it.
+
+═══════════════════════════════════════════════════════════════════
+STEP 2: See Today's Follow-Ups (1 minute)
+═══════════════════════════════════════════════════════════════════
+
+Open command line/terminal and run:
+  
+  node follow-up-tracker.js
+
+You'll see:
+- 🔥 Follow-ups due TODAY (with priority)
+- 📊 Pipeline summary
+- 📈 Your stats this week
+
+Do these follow-ups FIRST. They're your priority.
+
+═══════════════════════════════════════════════════════════════════
+STEP 3: Add Your Accounts (15 minutes)
+═══════════════════════════════════════════════════════════════════
+
+1. Open: accounts.csv (in Excel or Google Sheets)
+2. Replace the sample data with YOUR prospects
+3. Keep the same columns:
+   - Account Name
+   - Contact
+   - Phone
+   - Email
+   - Status (NEW, QUOTED, NEGOTIATING, etc.)
+   - Last Activity
+   - Last Activity Date
+   - Deal Size EUR
+
+4. Save
+
+Done! Now the system knows about your accounts.
+
+═══════════════════════════════════════════════════════════════════
+STEP 4: Log Your Activities (30 seconds per activity)
+═══════════════════════════════════════════════════════════════════
+
+After every call, email, or visit:
+
+1. Open: activities.csv
+2. Add one line with:
+   - Date (2025-02-01)
+   - Time (09:30)
+   - Type (Call, Email, Visit, Quote)
+   - Account name
+   - Contact name
+   - What you discussed
+   - Outcome
+
+3. Save
+
+That's it! The tracker uses this to know what to follow up on.
+
+═══════════════════════════════════════════════════════════════════
+STEP 5: Use Email Templates (2 minutes per email)
+═══════════════════════════════════════════════════════════════════
+
+Open: email-templates.txt
+
+10 ready-to-use templates:
+1. Post-site visit (send within 24 hours)
+2. Quote follow-up (3 days after)
+3. Gentle reminder (1 week no response)
+4. Still interested? (2 weeks)
+5. Let's reconnect (1 month)
+6. Cold outreach
+7. Price negotiation
+8. Closing email
+9. Thank you (deal closed)
+10. Stay in touch (lost deal)
+
+Just:
+1. Copy template
+2. Fill in [NAMES]
+3. Send
+
+Saves 30+ minutes/day on email writing!
+
+═══════════════════════════════════════════════════════════════════
+YOUR DAILY ROUTINE (15 minutes/day)
+═══════════════════════════════════════════════════════════════════
+
+MORNING (5 minutes):
+  □ Run: node follow-up-tracker.js
+  □ See today's follow-ups
+  □ Add to calendar
+  □ Pick your top 3 calls to make
+
+DURING DAY (ongoing):
+  □ Make calls/send emails
+  □ After each one, update activities.csv (30 sec)
+  □ Update account status if it changed
+
+EVENING (5 minutes):
+  □ Review what you did today
+  □ Update any statuses
+  □ Plan tomorrow's 3 priorities
+
+═══════════════════════════════════════════════════════════════════
+THE FOLLOW-UP RULES (Automatic!)
+═══════════════════════════════════════════════════════════════════
+
+The system automatically knows:
+
+Quote sent 3 days ago?     → Time to CALL
+Site visit 24 hours ago?   → Send summary EMAIL
+No response 7 days?        → Gentle REMINDER
+No response 2 weeks?       → "Still interested?" EMAIL
+No response 3 weeks?       → Critical CALL
+Deal stalled 1 month?      → Reassess CALL
+New lead 3+ days?          → Follow-up CALL
+
+Don't have to remember. The script tells you.
+
+═══════════════════════════════════════════════════════════════════
+ACCOUNT STATUS LEGEND
+═══════════════════════════════════════════════════════════════════
+
+NEW              - First contact made
+QUALIFIED        - They have a need we can solve
+DEMO             - Showed them our solution
+QUOTE SENT       - Waiting for their review
+AWAITING RESPONSE - Waiting to hear back
+NEGOTIATING      - Back & forth on terms
+READY TO CLOSE   - Just waiting on signature
+CLOSED           - They're a customer ✅
+LOST             - They chose someone else
+STALLED          - Haven't heard in weeks
+ON HOLD          - They want to wait
+NO RESPONSE      - No reply after attempts
+
+Update these as deals progress.
+
+═══════════════════════════════════════════════════════════════════
+FILES IN THIS FOLDER
+═══════════════════════════════════════════════════════════════════
+
+accounts.csv
+  → Your prospect master list
+  → Update after each contact
+  → Use for accounts.csv column reference
+
+activities.csv
+  → Your activity log
+  → Update after each call/email/visit
+  → Shows what you've done
+
+follow-up-tracker.js
+  → The magic script
+  → Run: node follow-up-tracker.js
+  → Shows today's follow-ups + stats
+
+dashboard.html
+  → Visual pipeline tracker
+  → Open in web browser
+  → Shows entire pipeline
+
+email-templates.txt
+  → 10 copy-paste ready templates
+  → Saves 30+ min/day writing emails
+
+follow-up-rules.json
+  → The rules engine config
+  → Don't edit unless you know what you're doing
+
+README.md
+  → Complete documentation
+  → Read if you want deep dive
+
+═══════════════════════════════════════════════════════════════════
+SUCCESS METRICS (Check Monthly)
+═══════════════════════════════════════════════════════════════════
+
+□ Activities per week: _____ (target: 15-20)
+□ Quotes sent per month: _____
+□ Quote-to-close rate: _____ % (target: 30-40%)
+□ Average deal size: €_____ 
+□ Pipeline value: €_____
+□ Follow-up adherence: _____ % (target: 95%+)
+
+Track these to see if the system is working!
+
+═══════════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════
+
+Q: Script won't run
+A: Make sure Node.js is installed. Download from nodejs.org
+
+Q: Dashboard not showing my data
+A: Add your accounts to accounts.csv first (sample data is there)
+
+Q: Can't run node command
+A: Make sure you're in the right folder first:
+   cd C:\Users\kleme\.openclaw\workspace\projects\follow-up-tracker
+
+Q: How often should I run the tracker?
+A: Every morning - takes 1 second, shows today's follow-ups
+
+Q: Can I use Google Sheets instead of Excel?
+A: Yes! Export as CSV from Google Sheets, save in this folder
+
+═══════════════════════════════════════════════════════════════════
+THAT'S IT!
+═══════════════════════════════════════════════════════════════════
+
+You're all set. The system is ready to go.
+
+Summary:
+✅ Dashboard: Open dashboard.html anytime to see pipeline
+✅ Tracker: Run node follow-up-tracker.js every morning
+✅ Logging: Update CSV files after each activity (30 sec)
+✅ Templates: Copy-paste emails from email-templates.txt
+
+Everything else is automatic!
+
+Questions? Check README.md for complete documentation.
+
+Now go sell! 🚀
+
+═══════════════════════════════════════════════════════════════════

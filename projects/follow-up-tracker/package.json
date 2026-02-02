@@ -1,0 +1,37 @@
+{
+  "name": "karcher-follow-up-tracker",
+  "version": "1.0.0",
+  "description": "Automated sales follow-up tracker for Kärcher Key Account Managers",
+  "main": "follow-up-tracker.js",
+  "bin": {
+    "follow-up-tracker": "follow-up-tracker.js"
+  },
+  "scripts": {
+    "start": "node follow-up-tracker.js",
+    "track": "node follow-up-tracker.js",
+    "daily": "node follow-up-tracker.js",
+    "dashboard": "node server.js",
+    "server": "node server.js",
+    "dev": "node server.js",
+    "analytics": "node analytics.js",
+    "analyze": "node analytics.js",
+    "reports": "node email-reports.js",
+    "report": "node email-reports.js"
+  },
+  "dependencies": {
+    "csv-parse": "^5.4.1"
+  },
+  "keywords": [
+    "sales",
+    "follow-up",
+    "crm",
+    "tracker",
+    "pipeline",
+    "karcher"
+  ],
+  "author": "Icky's AI Assistant",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}

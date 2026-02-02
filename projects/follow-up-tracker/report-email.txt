@@ -1,0 +1,91 @@
+Subject: Weekly Sales Report - 25/01/2026 - 01/02/2026
+
+Hi there,
+
+Here's your weekly sales snapshot:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 THIS WEEK'S METRICS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pipeline Value:      €117.000
+Active Deals:        6
+Closure Rate:        0.0%
+Activities Logged:   0
+Deals Closed:        0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 DEAL PIPELINE STATUS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Active:       6 deals in motion
+Qualified:    undefined deals qualified
+Stalled:      2 deals need revival
+New:          2 prospects to qualify
+Closed:       0 deals closed
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⭐ YOUR BEST ACCOUNTS (By Engagement)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Hospital PQR
+   ███████░░░░░░░░░░░░░ 35/100
+
+2. Hotel DEF
+   █████░░░░░░░░░░░░░░░ 25/100
+
+3. City Center Offices
+   █████░░░░░░░░░░░░░░░ 25/100
+
+4. School VWX
+   █████░░░░░░░░░░░░░░░ 25/100
+
+5. Building XYZ
+   ████░░░░░░░░░░░░░░░░ 20/100
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️  DEALS AT RISK (Stalled - Needs Action)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Business Park GHI: €15000
+  Last contact: 2025-01-27
+
+• Shopping Mall MNO: €20000
+  Last contact: 2025-01-26
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 KEY INSIGHTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ Low Closure Rate
+Only 0.0% closure rate. Consider: better qualification, earlier follow-ups, or improved pitch
+
+⚡ Fast Sales Cycle
+Only 2 days average - keep this momentum!
+
+💰 Pipeline Concentration
+Only 0% of pipeline is closed. Focus on moving deals forward.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎬 TOP ACTIONS FOR THIS WEEK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. 🔴 Revive 2 stalled/no-response deals (€35.000)
+     • Business Park GHI: Robert Novak (€15000)
+  • Shopping Mall MNO: Vesna Horvat (€20000)
+
+2. 🔴 Push forward 4 hot leads ready to close
+     • Facility ABC: €5000
+  • Building XYZ: €12000
+  • Hotel DEF: €8000
+  • City Center Offices: €7000
+
+3. 🟡 Qualify 2 new prospect(s) - first touch is critical
+     • Restaurant Chain JKL: Mario
+  • Airport STU: Facilities
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Generated: 01/02/2026 at 23:03:20
+For detailed analytics, run: node analytics.js
+
+Good luck this week!

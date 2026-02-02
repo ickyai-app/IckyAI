@@ -1,0 +1,22 @@
+📊 *Weekly Sales Report* - 25/01/2026 - 01/02/2026
+
+*Key Metrics:*
+• Pipeline: *€117.000*
+• Active Deals: *6*
+• Closure Rate: *0.0%*
+• Activities: *0*
+• Closed: *0*
+
+*Status Breakdown:*
+Active: 6 | Qualified: undefined | Stalled: 2 | New: 2 | Closed: 0
+
+*Top Performers:*
+1. Hospital PQR (35/100)
+2. Hotel DEF (25/100)
+3. City Center Offices (25/100)
+
+⚠️  *Deals at Risk:* 2 stalled deals need attention
+• Business Park GHI: €15000
+• Shopping Mall MNO: €20000
+
+*Next Action:* Revive 2 stalled/no-response deals (€35.000)

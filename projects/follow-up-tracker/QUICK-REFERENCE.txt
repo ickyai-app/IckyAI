@@ -1,0 +1,308 @@
+================================================================================
+  🎯 SALES SYSTEM - QUICK REFERENCE CARD
+  Everything You Need to Know on One Page
+================================================================================
+
+📍 LOCATION
+  C:\Users\kleme\.openclaw\workspace\projects\follow-up-tracker\
+
+================================================================================
+  DAILY (Every Morning - 30 seconds)
+================================================================================
+
+Command:
+  cd projects/follow-up-tracker
+  node follow-up-tracker.js
+
+Output:
+  ✅ Your top 3-5 priority follow-ups for today
+  ✅ Contact names and numbers
+  ✅ Reason for follow-up (timing, urgency)
+  ✅ Current pipeline value
+
+Action:
+  → Add these to your calendar first thing
+  → Do them before other work
+
+================================================================================
+  DURING DAY (After each call/email/visit - 1 minute)
+================================================================================
+
+1. Open: accounts.csv (in Excel or any text editor)
+   → Update the Status column if deal progressed
+   → Update Last Activity Date
+
+2. Open: activities.csv
+   → Add ONE new row with today's interaction
+   → Format: Date | Time | Type | Account | Contact | Notes | Outcome
+
+3. Save both files
+   → System automatically picks up changes
+
+Example activity entry:
+  2026-02-01 | 14:30 | Call | Building XYZ | Sarah J | Discussed timeline | Interested
+
+================================================================================
+  ANYTIME (Check your pipeline - 1 minute)
+================================================================================
+
+View Dashboard:
+  Open: projects/follow-up-tracker/dashboard.html
+  
+  Shows:
+  ✅ Pipeline breakdown by status
+  ✅ Account counts
+  ✅ Total pipeline value
+  ✅ Recent activities
+
+================================================================================
+  WEEKLY (Every Friday 2 PM - 15 minutes)
+================================================================================
+
+Step 1: RUN ANALYTICS (1 minute)
+  node analytics.js
+  
+  Output:
+  ✅ Key metrics (pipeline, closure rate, cycle time)
+  ✅ Insights (what's working/not working)
+  ✅ Top accounts (by engagement score)
+  ✅ At-risk deals (need immediate action)
+  ✅ Recommendations (prioritized actions)
+
+Step 2: GENERATE REPORTS (1 minute - Optional)
+  node email-reports.js
+  
+  Creates:
+  ✅ report-email.txt (send to yourself)
+  ✅ report-slack.txt (post to team)
+  ✅ report-markdown.md (add to docs)
+
+Step 3: REVIEW INSIGHTS (5 minutes)
+  Open: report-email.txt
+  Read: Metrics, insights, recommendations
+  Note: What's working? What needs attention?
+
+Step 4: PLAN NEXT WEEK (8 minutes)
+  Review: 🔴 HIGH priority recommendations
+  Actions:
+    → Schedule 3 key calls
+    → Prepare outreach emails
+    → Update forecast
+    → Plan next week's strategy
+
+================================================================================
+  ESSENTIAL COMMANDS (Copy & Paste)
+================================================================================
+
+Daily follow-ups:
+  cd projects/follow-up-tracker && node follow-up-tracker.js
+
+Weekly analysis:
+  cd projects/follow-up-tracker && node analytics.js
+
+Generate reports:
+  cd projects/follow-up-tracker && node email-reports.js
+
+View dashboard:
+  start projects/follow-up-tracker/dashboard.html
+
+View 2nd Brain app:
+  cd projects/second-brain && npm run dev
+  (then open http://localhost:3000 in browser)
+
+================================================================================
+  YOUR DATA FILES (Keep Updated!)
+================================================================================
+
+accounts.csv
+  → Your list of prospects
+  → Update Status when deal progresses
+  → Add new accounts as you prospect
+  → Important: Keep Last Activity Date current
+
+activities.csv
+  → Log of every call, email, visit
+  → Add ONE line after each interaction
+  → Format matters: Date | Time | Type | Account | Contact | Notes | Outcome
+  → This is your proof of work
+
+================================================================================
+  METRIC MEANINGS (What to Watch)
+================================================================================
+
+Pipeline Value
+  → Total € of all active deals
+  → Goal: Should grow each week
+
+Active Deals
+  → Number of prospects in progress
+  → Goal: 6-10 for steady pipeline
+
+Closure Rate
+  → % of prospects becoming closed deals
+  → Goal: 15-30% (higher is better)
+
+Average Deal Size
+  → €12,000 = average deal value
+  → Use to set revenue targets
+
+Sales Cycle
+  → Days from first contact to close
+  → Track to understand your speed
+
+Engagement Score (per account)
+  → 0-100 ranking (higher = more active)
+  → Focus on accounts above 70
+
+At-Risk Deals
+  → Stalled for 5+ days
+  → High priority to revive
+
+================================================================================
+  INSIGHTS INTERPRETATION
+================================================================================
+
+✅ Green Light (Keep it up):
+  ✅ "Excellent Closure Rate" - Your process works
+  ✅ "Strong Engagement" - Great follow-up discipline
+  ✅ "Fast Sales Cycle" - You're efficient
+
+⚠️ Yellow Light (Review):
+  ⚠️ "Low Closure Rate" - Check qualification or pitch
+  ⚠️ "Weak Engagement" - Need more activity
+  ⚠️ "Long Sales Cycle" - Could be normal for your industry
+
+🔴 Red Light (Action needed):
+  🔴 "At-Risk Deals" - Stalled prospects need attention
+  🔴 "New Prospects" - Need first call/email
+  🔴 "High-Value Deals" - Deserve your focus
+
+================================================================================
+  RECOMMENDATIONS (What to Do)
+================================================================================
+
+🔴 HIGH PRIORITY (Do First):
+  • Usually: Revive stalled deals, push hot leads, focus on big deals
+  • Action: Schedule these TODAY
+
+🟡 MEDIUM PRIORITY (Do Second):
+  • Usually: Qualify new prospects, follow-up on warm leads
+  • Action: Schedule these this week
+
+The system prioritizes based on:
+  → Deal value (bigger = higher priority)
+  → Time stalled (longer = higher priority)
+  → Deal status (ready to close = higher priority)
+
+================================================================================
+  COMMON QUESTIONS
+================================================================================
+
+Q: How often should I log activities?
+A: After every call/email/visit. Takes 1 minute.
+
+Q: What status values should I use?
+A: NEW, QUALIFIED, DEMO COMPLETED, AWAITING RESPONSE, QUOTE SENT, 
+   NEGOTIATING, STALLED, NO RESPONSE, CLOSED
+
+Q: What if my deal values are in € with comma thousands separator?
+A: Remove them: 25000 (not 25.000 or €25,000)
+
+Q: How do I know if I'm doing well?
+A: Look for trends: Pipeline growing? Activities increasing? 
+   Closure rate improving? Cycle time shrinking?
+
+Q: Can I change the system?
+A: Yes! It's all yours. CSV files are standard format, scripts are editable.
+
+Q: What if I miss logging an activity?
+A: Add it later when you remember. Better late than never.
+
+================================================================================
+  WEEKLY CHECKLIST
+================================================================================
+
+Monday:
+  ☐ Run follow-up tracker each morning
+  ☐ Focus on recommended actions
+
+Tuesday-Thursday:
+  ☐ Log all activities in activities.csv
+  ☐ Update account status when deals progress
+  ☐ Open dashboard to check pipeline status
+
+Friday:
+  ☐ 2:00 PM - Run analytics (node analytics.js)
+  ☐ 2:05 PM - Review insights and recommendations
+  ☐ 2:10 PM - Generate reports (optional)
+  ☐ 2:15 PM - Plan next week's priorities
+
+================================================================================
+  NEXT 7 DAYS
+================================================================================
+
+Day 1 (Today):
+  → Explore the system
+  → Run each command to see what it does
+  → Update your data with real accounts
+
+Day 2-4:
+  → Use daily tracker each morning
+  → Log activities consistently
+  → Review dashboard to stay on track
+
+Day 5 (Friday):
+  → Run weekly analytics
+  → See your metrics
+  → Read recommendations
+  → Plan next week
+
+Week 2+:
+  → Repeat the system
+  → Watch metrics improve
+  → Adjust strategy based on insights
+  → Close more deals!
+
+================================================================================
+  SUCCESS METRICS (What to Track)
+================================================================================
+
+Daily:
+  ✓ Did you run the tracker?
+  ✓ How many activities did you log?
+  ✓ Did you focus on recommended actions?
+
+Weekly:
+  ✓ Pipeline value (growing?)
+  ✓ Activity count (increasing?)
+  ✓ Deals progressing (any closed?)
+
+Monthly:
+  ✓ Revenue (primary goal)
+  ✓ Closure rate (improving?)
+  ✓ Sales cycle (getting faster?)
+
+================================================================================
+  REMEMBER
+================================================================================
+
+✓ System works for you if you feed it data
+✓ Garbage in = garbage out
+✓ 5 minutes/day logging = hours saved on decisions
+✓ Weekly analysis = monthly improvements
+✓ Focus on HIGH priority recommendations = results
+
+================================================================================
+
+Questions? Read the full guides:
+  → brain/complete-sales-system.md (Big picture)
+  → ANALYTICS-GUIDE.md (How to use analytics)
+  → brain/nightly-session-feb1-analytics.md (Technical details)
+
+Ready to get started?
+  → cd projects/follow-up-tracker
+  → node follow-up-tracker.js
+
+Let's go! 🚀
+
+================================================================================

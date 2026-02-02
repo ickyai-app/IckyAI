@@ -1,0 +1,238 @@
+{
+  "history": [
+    {
+      "statusBreakdown": {
+        "QUOTE SENT": 1,
+        "AWAITING RESPONSE": 1,
+        "DEMO COMPLETED": 1,
+        "STALLED": 1,
+        "QUALIFIED": 1,
+        "NEW": 2,
+        "NO RESPONSE": 1,
+        "NEGOTIATING": 2
+      },
+      "valueByStatus": {
+        "QUOTE SENT": 0,
+        "AWAITING RESPONSE": 0,
+        "DEMO COMPLETED": 0,
+        "STALLED": 0,
+        "QUALIFIED": 0,
+        "NEW": 0,
+        "NO RESPONSE": 0,
+        "NEGOTIATING": 0
+      },
+      "closureRate": "0.0",
+      "activityByType": {
+        "other": 12
+      },
+      "totalActivities": 12,
+      "activitiesPerAccount": "1.2",
+      "averageDealSize": 0,
+      "totalPipeline": 0,
+      "closedDeals": 0,
+      "salesCycleDays": 2,
+      "engagementScores": {
+        "undefined": 0
+      },
+      "timestamp": "2026-02-01T22:01:57.137Z"
+    },
+    {
+      "statusBreakdown": {
+        "QUOTE SENT": 1,
+        "AWAITING RESPONSE": 1,
+        "DEMO COMPLETED": 1,
+        "STALLED": 1,
+        "QUALIFIED": 1,
+        "NEW": 2,
+        "NO RESPONSE": 1,
+        "NEGOTIATING": 2
+      },
+      "valueByStatus": {
+        "QUOTE SENT": 5000,
+        "AWAITING RESPONSE": 12000,
+        "DEMO COMPLETED": 8000,
+        "STALLED": 15000,
+        "QUALIFIED": 7000,
+        "NEW": 21000,
+        "NO RESPONSE": 20000,
+        "NEGOTIATING": 29000
+      },
+      "closureRate": "0.0",
+      "activityByType": {
+        "call": 4,
+        "email": 5,
+        "site visit": 2,
+        "quote": 1
+      },
+      "totalActivities": 12,
+      "activitiesPerAccount": "1.2",
+      "averageDealSize": 11700,
+      "totalPipeline": 117000,
+      "closedDeals": 0,
+      "salesCycleDays": 2,
+      "engagementScores": {
+        "Facility ABC": 10,
+        "Building XYZ": 20,
+        "Hotel DEF": 25,
+        "Business Park GHI": 0,
+        "City Center Offices": 25,
+        "Restaurant Chain JKL": 10,
+        "Shopping Mall MNO": 0,
+        "Hospital PQR": 35,
+        "Airport STU": 10,
+        "School VWX": 25
+      },
+      "timestamp": "2026-02-01T22:03:17.497Z"
+    }
+  ],
+  "latest": {
+    "statusBreakdown": {
+      "QUOTE SENT": 1,
+      "AWAITING RESPONSE": 1,
+      "DEMO COMPLETED": 1,
+      "STALLED": 1,
+      "QUALIFIED": 1,
+      "NEW": 2,
+      "NO RESPONSE": 1,
+      "NEGOTIATING": 2
+    },
+    "valueByStatus": {
+      "QUOTE SENT": 5000,
+      "AWAITING RESPONSE": 12000,
+      "DEMO COMPLETED": 8000,
+      "STALLED": 15000,
+      "QUALIFIED": 7000,
+      "NEW": 21000,
+      "NO RESPONSE": 20000,
+      "NEGOTIATING": 29000
+    },
+    "closureRate": "0.0",
+    "activityByType": {
+      "call": 4,
+      "email": 5,
+      "site visit": 2,
+      "quote": 1
+    },
+    "totalActivities": 12,
+    "activitiesPerAccount": "1.2",
+    "averageDealSize": 11700,
+    "totalPipeline": 117000,
+    "closedDeals": 0,
+    "salesCycleDays": 2,
+    "engagementScores": {
+      "Facility ABC": 10,
+      "Building XYZ": 20,
+      "Hotel DEF": 25,
+      "Business Park GHI": 0,
+      "City Center Offices": 25,
+      "Restaurant Chain JKL": 10,
+      "Shopping Mall MNO": 0,
+      "Hospital PQR": 35,
+      "Airport STU": 10,
+      "School VWX": 25
+    },
+    "timestamp": "2026-02-01T22:03:17.497Z"
+  },
+  "lastReport": {
+    "title": "📊 Weekly Sales Report",
+    "period": "25/01/2026 - 01/02/2026",
+    "generatedAt": "2026-02-01T22:03:17.497Z",
+    "summary": {
+      "totalAccounts": 10,
+      "pipeline": "€117.000",
+      "closedThisWeek": 0,
+      "activitiesThisWeek": 0,
+      "avgDeal": "€11.700",
+      "closureRate": "0.0%"
+    },
+    "statuses": {
+      "active": 6,
+      "stalled": 2,
+      "closed": 0,
+      "new": 2
+    },
+    "activities": {
+      "call": 4,
+      "email": 5,
+      "site visit": 2,
+      "quote": 1
+    },
+    "insights": [
+      {
+        "type": "warning",
+        "title": "⚠️ Low Closure Rate",
+        "message": "Only 0.0% closure rate. Consider: better qualification, earlier follow-ups, or improved pitch"
+      },
+      {
+        "type": "positive",
+        "title": "⚡ Fast Sales Cycle",
+        "message": "Only 2 days average - keep this momentum!"
+      },
+      {
+        "type": "warning",
+        "title": "💰 Pipeline Concentration",
+        "message": "Only 0% of pipeline is closed. Focus on moving deals forward."
+      }
+    ],
+    "recommendations": [
+      {
+        "priority": "high",
+        "action": "Revive 2 stalled/no-response deals (€35.000)",
+        "details": "  • Business Park GHI: Robert Novak (€15000)\n  • Shopping Mall MNO: Vesna Horvat (€20000)",
+        "template": "Check-in"
+      },
+      {
+        "priority": "high",
+        "action": "Push forward 4 hot leads ready to close",
+        "details": "  • Facility ABC: €5000\n  • Building XYZ: €12000\n  • Hotel DEF: €8000\n  • City Center Offices: €7000",
+        "template": "Follow-up"
+      },
+      {
+        "priority": "medium",
+        "action": "Qualify 2 new prospect(s) - first touch is critical",
+        "details": "  • Restaurant Chain JKL: Mario\n  • Airport STU: Facilities",
+        "template": "Cold-Outreach"
+      },
+      {
+        "priority": "high",
+        "action": "Prioritize 3 high-value deal(s): €25000 +",
+        "details": "  • Hospital PQR: €25000\n  • Shopping Mall MNO: €20000\n  • Airport STU: €18000",
+        "template": "Strategic-Follow-up"
+      }
+    ],
+    "topAccounts": [
+      {
+        "name": "Hospital PQR",
+        "score": 35
+      },
+      {
+        "name": "Hotel DEF",
+        "score": 25
+      },
+      {
+        "name": "City Center Offices",
+        "score": 25
+      },
+      {
+        "name": "School VWX",
+        "score": 25
+      },
+      {
+        "name": "Building XYZ",
+        "score": 20
+      }
+    ],
+    "atRisk": [
+      {
+        "name": "Business Park GHI",
+        "value": 15000,
+        "lastUpdate": "2025-01-27"
+      },
+      {
+        "name": "Shopping Mall MNO",
+        "value": 20000,
+        "lastUpdate": "2025-01-26"
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+Date,Time,Type,Account,Contact,Notes,Duration,Outcome,Next Step,Follow-up Date
+2025-01-31,10:30,Call,Facility ABC,John Smith,Discussed floor cleaning needs for main hall,15,Interested - asked for quote,Send quote,2025-02-03
+2025-01-31,14:00,Email,Building XYZ,Sarah Johnson,Sent proposal with pricing options,5,Sent,Follow up call,2025-02-01
+2025-01-30,09:00,Site Visit,Hotel DEF,Manager,Site assessment - showed demo equipment,45,Very interested,Send detailed quote,2025-02-02
+2025-01-29,11:00,Call,City Center Offices,Petra Kranjec,Confirmed budget availability and timeline,20,Ready for next step,Schedule demo,2025-02-05
+2025-01-28,15:30,Quote,Building XYZ,Sarah Johnson,Sent full proposal package via email,5,Awaiting response,Follow up,2025-02-01
+2025-01-27,10:00,Email,Business Park GHI,Robert Novak,Sent proposal as requested,5,Sent,Follow up call,2025-02-03
+2025-01-26,13:00,Email,Shopping Mall MNO,Vesna Horvat,Sent quote with volume pricing,5,Sent,Follow up call,2025-02-02
+2025-01-25,09:30,Call,Restaurant Chain JKL,Mario,Initial contact - cold call,10,Expressed some interest,Send info,2025-02-01
+2025-01-24,14:00,Site Visit,Hospital PQR,Dr. Anja,Full facility assessment and demo,60,Very interested,Discuss pricing,2025-01-31
+2025-01-24,16:00,Email,Hospital PQR,Dr. Anja,Sent proposal following site visit,5,Sent proposal,Follow up call,2025-01-31
+2025-01-20,11:00,Email,Airport STU,Facilities,Initial inquiry email,5,Sent,Follow up,2025-02-03
+2025-01-31,16:00,Call,School VWX,Principal,Discussing volume pricing for multiple units,15,Positive response,Follow up with final quote,2025-02-07
