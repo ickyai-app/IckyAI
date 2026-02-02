@@ -23,20 +23,44 @@ export default function Dashboard({ user }) {
   const loadData = async () => {
     try {
       const supabase = getSupabaseClient();
+      
+      // Mock data for demo mode
+      const mockAccounts = [
+        { id: '1', account_name: 'Kranjska Gora Facility', contact_name: 'Marko Novak', email: 'marko@facility.si', phone: '+386 4 588 2600', status: 'WARM', deal_size: 15000, last_activity: '2025-02-01', next_action: 'Follow-up call' },
+        { id: '2', account_name: 'Ljubljana Business Center', contact_name: 'Ana Horvat', email: 'ana@ljcenter.si', phone: '+386 1 200 3000', status: 'PROSPECT', deal_size: 25000, last_activity: '2025-01-30', next_action: 'Send proposal' },
+        { id: '3', account_name: 'Maribor Industrial', contact_name: 'Jure Kokal', email: 'jure@maribor.si', phone: '+386 2 625 9999', status: 'ACTIVE', deal_size: 45000, last_activity: '2025-02-02', next_action: 'Negotiate contract' },
+      ];
+
+      const mockActivities = [
+        { id: '1', account_name: 'Kranjska Gora Facility', activity_type: 'CALL', notes: 'Discussed cleaning equipment needs', duration_minutes: 30, outcome: 'Interested in demo', created_at: '2025-02-01' },
+        { id: '2', account_name: 'Ljubljana Business Center', activity_type: 'EMAIL', notes: 'Sent initial proposal', duration_minutes: 5, outcome: 'Awaiting response', created_at: '2025-01-30' },
+        { id: '3', account_name: 'Maribor Industrial', activity_type: 'VISIT', notes: 'On-site facility tour', duration_minutes: 120, outcome: 'Ready to sign', created_at: '2025-02-02' },
+      ];
+
       if (!supabase) {
+        setAccounts(mockAccounts);
+        setActivities(mockActivities);
         setLoading(false);
         return;
       }
 
       // Load accounts
       const { data: accountsData } = await supabase.from('accounts').select('*');
-      setAccounts(accountsData || []);
+      setAccounts(accountsData || mockAccounts);
 
       // Load activities
       const { data: activitiesData } = await supabase.from('activities').select('*');
-      setActivities(activitiesData || []);
+      setActivities(activitiesData || mockActivities);
     } catch (error) {
       console.error('Error loading data:', error);
+      // Use mock data on error
+      setAccounts([
+        { id: '1', account_name: 'Kranjska Gora Facility', contact_name: 'Marko Novak', email: 'marko@facility.si', phone: '+386 4 588 2600', status: 'WARM', deal_size: 15000, last_activity: '2025-02-01', next_action: 'Follow-up call' },
+        { id: '2', account_name: 'Ljubljana Business Center', contact_name: 'Ana Horvat', email: 'ana@ljcenter.si', phone: '+386 1 200 3000', status: 'PROSPECT', deal_size: 25000, last_activity: '2025-01-30', next_action: 'Send proposal' },
+      ]);
+      setActivities([
+        { id: '1', account_name: 'Kranjska Gora Facility', activity_type: 'CALL', notes: 'Discussed cleaning equipment needs', duration_minutes: 30, outcome: 'Interested in demo', created_at: '2025-02-01' },
+      ]);
     } finally {
       setLoading(false);
     }

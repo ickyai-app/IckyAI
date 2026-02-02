@@ -18,7 +18,7 @@ export default function LoginPage({ onLogin }) {
     try {
       const supabase = getSupabaseClient();
       if (!supabase) {
-        setError('Supabase not configured');
+        setError('Supabase not configured. Use Demo Login instead.');
         setLoading(false);
         return;
       }
@@ -51,6 +51,22 @@ export default function LoginPage({ onLogin }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDemoLogin = () => {
+    setLoading(true);
+    // Mock user object
+    const mockUser = {
+      id: 'demo-user-123',
+      email: 'demo@ickyai.com',
+      user_metadata: {
+        name: 'Demo User'
+      }
+    };
+    setTimeout(() => {
+      onLogin(mockUser);
+      setLoading(false);
+    }, 500);
   };
 
   return (
@@ -109,6 +125,17 @@ export default function LoginPage({ onLogin }) {
               {loading ? 'Loading...' : isSignup ? 'Sign Up' : 'Sign In'}
             </button>
           </form>
+
+          <div className="mt-4 pt-4 border-t border-gray-600">
+            <button
+              onClick={handleDemoLogin}
+              disabled={loading}
+              className="w-full px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Loading...' : '🚀 Use Demo Login'}
+            </button>
+            <p className="text-xs text-gray-400 mt-2 text-center">Try the app without Supabase</p>
+          </div>
 
           <div className="mt-6 text-center text-cyan-300 text-sm">
             {isSignup ? 'Already have an account?' : "Don't have an account?"}
