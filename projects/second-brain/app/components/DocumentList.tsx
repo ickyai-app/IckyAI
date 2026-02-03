@@ -1,6 +1,7 @@
 'use client';
 
-import { Document, getTypeColor } from '@/lib/documents';
+import { Document } from '@/lib/types';
+import { getTypeColor } from '@/lib/utils';
 import Link from 'next/link';
 
 interface DocumentListProps {

@@ -9,6 +9,7 @@ import ActivitiesForm from './ActivitiesForm';
 import FollowUpReminders from './FollowUpReminders';
 import EmailTemplates from './EmailTemplates';
 import CoachingTools from './CoachingTools';
+import AICoach from './AICoach';
 
 export default function Dashboard({ user }) {
   const [activeTab, setActiveTab] = useState('pipeline');
@@ -79,7 +80,7 @@ export default function Dashboard({ user }) {
       case 'templates':
         return <EmailTemplates />;
       case 'coaching':
-        return <CoachingTools accounts={accounts} activities={activities} />;
+        return <AICoach accounts={accounts} activities={activities} />;
       default:
         return <PipelineOverview accounts={accounts} activities={activities} />;
     }
@@ -96,14 +97,16 @@ export default function Dashboard({ user }) {
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto relative z-10">
-          {/* Neon Header */}
-          <div className="neon-header m-4 md:m-8 mb-6">
-            <h1 className="neon-title">⚡ ICKY AI NEXUS ▸ Advanced Sales Intelligence System 2050 ◂</h1>
-            <p className="neon-subtitle">Powered by Neural Sync | Real-time Intelligence Hub</p>
-          </div>
+        <div className="flex-1 overflow-auto relative z-10 flex flex-col">
+          {/* Neon Header - Hidden for Coaching */}
+          {activeTab !== 'coaching' && (
+            <div className="neon-header m-4 md:m-8 mb-6">
+              <h1 className="neon-title">⚡ ICKY AI NEXUS ▸ Advanced Sales Intelligence System 2050 ◂</h1>
+              <p className="neon-subtitle">Powered by Neural Sync | Real-time Intelligence Hub</p>
+            </div>
+          )}
 
-          <div className="p-4 md:p-8 pt-0">
+          <div className={`${activeTab === 'coaching' ? 'flex-1 p-0 md:p-4' : 'p-4 md:p-8 pt-0'}`}>
             {loading ? (
               <div className="flex items-center justify-center h-96">
                 <div className="text-center">

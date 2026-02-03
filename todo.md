@@ -1,10 +1,11 @@
 # Icky's TODO List
 
-## 🔥 Today's Priorities
-- [ ] Review and respond to urgent client emails
-- [ ] Follow up with warm leads from this week
-- [ ] Update CRM with recent conversations
-- [ ] Plan tomorrow's sales calls
+## 🔥 TODAY'S PRIORITIES (Feb 2, Updated 12:30 AM)
+- [x] ✅ AI Sales Coach built and deployed!
+- [ ] Test AI Coach at https://ickyai-net.vercel.app (click 🎯 Coaching tab)
+- [ ] Call Celovite storitve (new director - €150k opportunity)
+- [ ] Schedule robot demo with Sintal EKO (Miha - beat TASKI)
+- [ ] Contact Aktiva Skupina (Katja - expansion coaching)
 
 ## 📞 Sales Pipeline
 ### Hot Leads (Close Soon)

@@ -1,14 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-
-export interface Document {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-  type: 'journal' | 'concept' | 'system' | 'profile' | 'other';
-  path: string;
-}
+import { Document } from './types';
 
 const BRAIN_PATH = path.join(process.cwd(), '..', 'brain');
 
@@ -56,14 +48,4 @@ export async function getDocuments(): Promise<Document[]> {
 export async function getDocument(id: string): Promise<Document | null> {
   const documents = await getDocuments();
   return documents.find(d => d.id === id) || null;
-}
-
-export function getTypeColor(type: Document['type']): string {
-  switch (type) {
-    case 'journal': return 'bg-blue-100 text-blue-800';
-    case 'concept': return 'bg-purple-100 text-purple-800';
-    case 'system': return 'bg-green-100 text-green-800';
-    case 'profile': return 'bg-orange-100 text-orange-800';
-    default: return 'bg-gray-100 text-gray-800';
-  }
 }

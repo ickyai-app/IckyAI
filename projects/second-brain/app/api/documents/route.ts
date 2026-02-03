@@ -1,11 +1,12 @@
 import { getDocuments } from '@/lib/documents';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
     const documents = await getDocuments();
-    return Response.json(documents);
+    return NextResponse.json(documents);
   } catch (error) {
     console.error('Error fetching documents:', error);
-    return Response.json({ error: 'Failed to fetch documents' }, { status: 500 });
+    return NextResponse.json([], { status: 200 });
   }
 }

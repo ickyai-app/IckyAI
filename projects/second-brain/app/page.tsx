@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import DocumentList from './components/DocumentList';
 import DocumentViewer from './components/DocumentViewer';
-import { Document } from '@/lib/documents';
+import { Document } from '@/lib/types';
 
 function BrainContent() {
   const searchParams = useSearchParams();
